@@ -10,16 +10,15 @@ const DepositList = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [statusFilter, setStatusFilter] = useState('ACTIVE');
 
   useEffect(() => {
     fetchDeposits();
-  }, [page, statusFilter]);
+  }, [page]);
 
   const fetchDeposits = async () => {
     try {
       setLoading(true);
-      const data = await publicService.getDeposits(statusFilter, page, 10);
+      const data = await publicService.getDeposits(page, 10);
       setDeposits(data.content);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -33,36 +32,7 @@ const DepositList = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Deposits</h2>
-
-      {/* Status Filter */}
-      <div className="bg-white rounded-lg shadow p-3 sm:p-4 mb-4 sm:mb-6 overflow-x-auto">
-        <div className="flex items-center space-x-2 sm:space-x-4 min-w-max">
-          <label className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Filter:</label>
-          <div className="flex space-x-2">
-            {['ACTIVE', 'RETURNED', 'SETTLED'].map((status) => (
-              <button
-                key={status}
-                onClick={() => {
-                  setStatusFilter(status);
-                  setPage(0);
-                }}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition whitespace-nowrap ${
-                  statusFilter === status
-                    ? status === 'ACTIVE'
-                      ? 'bg-green-600 text-white'
-                      : status === 'RETURNED'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                {status}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">All Deposits</h2>
 
       {/* Mobile Card View */}
       <div className="block sm:hidden space-y-4">
@@ -88,14 +58,6 @@ const DepositList = () => {
                 <span className="text-gray-600">Amount:</span>
                 <span className="font-semibold">{formatCurrency(deposit.amount)}</span>
               </div>
-              {statusFilter === 'ACTIVE' && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Current Interest:</span>
-                  <span className="font-semibold text-green-600">
-                    {formatCurrency(deposit.currentInterest || 0)}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         ))}
@@ -116,46 +78,44 @@ const DepositList = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Deposit Date
                 </th>
-                {statusFilter === 'ACTIVE' && (
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Current Interest
-                  </th>
-                )}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {deposits.map((deposit) => (
-                <tr key={deposit.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {deposit.memberName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatCurrency(deposit.amount)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(deposit.depositDate)}
-                  </td>
-                  {statusFilter === 'ACTIVE' && (
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
-                      {formatCurrency(deposit.currentInterest || 0)}
-                    </td>
-                  )}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      deposit.status === 'ACTIVE'
-                        ? 'bg-green-100 text-green-800'
-                        : deposit.status === 'RETURNED'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {deposit.status}
-                    </span>
+              {deposits.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                    No deposits found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                deposits.map((deposit) => (
+                  <tr key={deposit.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {deposit.memberName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatCurrency(deposit.amount)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {formatDate(deposit.depositDate)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        deposit.status === 'ACTIVE'
+                          ? 'bg-green-100 text-green-800'
+                          : deposit.status === 'RETURNED'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {deposit.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

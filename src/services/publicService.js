@@ -6,13 +6,13 @@ export const publicService = {
     return response.data;
   },
 
-  getDeposits: async (status = 'ACTIVE', page = 0, size = 10) => {
-    const response = await api.get(`/public/deposits?status=${status}&page=${page}&size=${size}`);
+  getDeposits: async (page = 0, size = 10) => {
+    const response = await api.get(`/public/deposits?page=${page}&size=${size}`);
     return response.data;
   },
 
-  getLoans: async (status = 'ACTIVE', page = 0, size = 10) => {
-    const response = await api.get(`/public/loans?status=${status}&page=${page}&size=${size}`);
+  getLoans: async (page = 0, size = 10) => {
+    const response = await api.get(`/public/loans?page=${page}&size=${size}`);
     return response.data;
   }
 };
