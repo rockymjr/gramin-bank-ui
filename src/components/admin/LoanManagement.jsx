@@ -9,7 +9,7 @@ import LoanClosure from './LoanClosure';
 import LoanPayment from './LoanPayment';
 import LoanPaymentHistory from './LoanPaymentHistory';
 
-const LoanManagement = () => {
+const LoanManagement = ({ readOnly }) => {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -77,13 +77,15 @@ const LoanManagement = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Loan Management</h2>
-        <button
-          onClick={handleAddNew}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
-        >
-          <Plus size={20} />
-          <span>Sanction Loan</span>
-        </button>
+        {!readOnly && (
+          <button
+            onClick={handleAddNew}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
+          >
+            <Plus size={20} />
+            <span>Sanction Loan</span>
+          </button>
+        )}
       </div>
 
       {/* Status Filter */}
@@ -116,24 +118,12 @@ const LoanManagement = () => {
               }`}
             >
               Closed
-            </button> <button
-          onClick={() => {
-            setStatusFilter('SETTLED');
-            setPage(0);
-          }}
-          className={`px-4 py-2 rounded-lg transition ${
-            statusFilter === 'SETTLED'
-              ? 'bg-gray-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Settled
-        </button>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-hidden">
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
@@ -151,6 +141,18 @@ const LoanManagement = () => {
               Loan Date
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Return Date
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Duration
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Interest Rate
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Monthly Interest
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest'}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -159,9 +161,11 @@ const LoanManagement = () => {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
+                {!readOnly && (
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                )}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -193,6 +197,18 @@ const LoanManagement = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {formatDate(loan.loanDate)}
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {loan.returnDate ? formatDate(loan.returnDate) : '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  {loan.durationDays ? `${loan.durationMonths} months ${loan.durationDays} days` : '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
+                  {loan.interestRate}%
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
+                  {formatCurrency((loan.loanAmount * loan.interestRate) / 100)}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
                   {formatCurrency(loan.currentInterest || loan.interestAmount)}
                 </td>
@@ -216,44 +232,46 @@ const LoanManagement = () => {
                     { loan.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex space-x-2">
-                    {statusFilter === 'ACTIVE' && (
-                      <>
+                {!readOnly && (
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-2">
+                      {statusFilter === 'ACTIVE' && (
+                        <>
+                          <button
+                            onClick={() => handleEdit(loan)}
+                            className="text-blue-600 hover:text-blue-900"
+                            title="Edit"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button
+                            onClick={() => setPaymentLoan(loan)}
+                            className="text-green-600 hover:text-green-900"
+                            title="Add Payment"
+                          >
+                            <DollarSign size={18} />
+                          </button>
+                          <button
+                            onClick={() => setClosingLoan(loan)}
+                            className="text-orange-600 hover:text-orange-900"
+                            title="Close Loan"
+                          >
+                            <XCircle size={18} />
+                          </button>
+                        </>
+                      )}
+                      {(loan.paidAmount > 0 || loan.status === 'CLOSED') && (
                         <button
-                          onClick={() => handleEdit(loan)}
-                          className="text-blue-600 hover:text-blue-900"
-                          title="Edit"
+                          onClick={() => setHistoryLoan(loan)}
+                          className="text-purple-600 hover:text-purple-900"
+                          title="Payment History"
                         >
-                          <Edit size={18} />
+                          <History size={18} />
                         </button>
-                        <button
-                          onClick={() => setPaymentLoan(loan)}
-                          className="text-green-600 hover:text-green-900"
-                          title="Add Payment"
-                        >
-                          <DollarSign size={18} />
-                        </button>
-                        <button
-                          onClick={() => setClosingLoan(loan)}
-                          className="text-orange-600 hover:text-orange-900"
-                          title="Close Loan"
-                        >
-                          <XCircle size={18} />
-                        </button>
-                      </>
-                    )}
-                    {(loan.paidAmount > 0 || loan.status === 'CLOSED') && (
-                      <button
-                        onClick={() => setHistoryLoan(loan)}
-                        className="text-purple-600 hover:text-purple-900"
-                        title="Payment History"
-                      >
-                        <History size={18} />
-                      </button>
-                    )}
-                  </div>
-                </td>
+                      )}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))
           )}
@@ -292,9 +310,9 @@ const LoanManagement = () => {
     </div>
   </div>
 
-  {showForm && <LoanForm loan={editingLoan} onClose={handleFormClose} />}
-  {closingLoan && <LoanClosure loan={closingLoan} onClose={handleClosureComplete} />}
-  {paymentLoan && <LoanPayment loan={paymentLoan} onClose={handlePaymentComplete} />}
+  {!readOnly && showForm && <LoanForm loan={editingLoan} onClose={handleFormClose} />}
+  {!readOnly && closingLoan && <LoanClosure loan={closingLoan} onClose={handleClosureComplete} />}
+  {!readOnly && paymentLoan && <LoanPayment loan={paymentLoan} onClose={handlePaymentComplete} />}
   {historyLoan && <LoanPaymentHistory loan={historyLoan} onClose={() => setHistoryLoan(null)} />}
 </div>
 );

@@ -3,13 +3,11 @@ import { memberService } from '../../services/memberService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
 import Loader from '../common/Loader';
-import ChangePinModal from './ChangePinModal';
-import { Wallet, TrendingUp, TrendingDown, DollarSign, Lock } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 const MemberDashboard = () => {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showChangePinModal, setShowChangePinModal] = useState(false);
 
   useEffect(() => {
     fetchDashboard();
@@ -33,18 +31,11 @@ const MemberDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Welcome, {dashboard.memberName}</h1>
           <p className="text-gray-600 mt-2">Phone: {dashboard.phone}</p>
         </div>
-        <button
-          onClick={() => setShowChangePinModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
-        >
-          <Lock size={20} />
-          <span>Change PIN</span>
-        </button>
       </div>
 
 
@@ -246,12 +237,6 @@ const MemberDashboard = () => {
           </div>
         </div>
       </div>
-      {showChangePinModal && (
-        <ChangePinModal onClose={(success) => {
-          setShowChangePinModal(false);
-          if (success) fetchDashboard();
-        }} />
-      )}
     </div>
   );
 };

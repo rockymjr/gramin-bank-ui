@@ -7,7 +7,7 @@ import Loader from '../common/Loader';
 import DepositForm from './DepositForm';
 import DepositReturn from './DepositReturn';
 
-const DepositManagement = () => {
+const DepositManagement = ({ readOnly }) => {
   const [deposits, setDeposits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -66,13 +66,15 @@ const DepositManagement = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Deposit Management</h2>
-        <button
-          onClick={handleAddNew}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
-        >
-          <Plus size={20} />
-          <span>Add Deposit</span>
-        </button>
+        {!readOnly && (
+          <button
+            onClick={handleAddNew}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
+          >
+            <Plus size={20} />
+            <span>Add Deposit</span>
+          </button>
+        )}
       </div>
 
       {/* Status Filter */}
@@ -104,18 +106,6 @@ const DepositManagement = () => {
             >
               Returned
             </button>
-            <button
-              onClick={() => {
-                setStatusFilter('SETTLED');
-                setPage(0);
-              }}
-              className={`px-4 py-2 rounded-lg transition ${statusFilter === 'SETTLED'
-                ? 'bg-gray-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-            >
-              Settled
-            </button>
           </div>
         </div>
       </div>
@@ -135,7 +125,13 @@ const DepositManagement = () => {
                   Deposit Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Return Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Duration
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                 Interest Rate
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Monthly Interest
@@ -152,7 +148,7 @@ const DepositManagement = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Notes
                 </th>
-                {statusFilter === 'ACTIVE' && (
+                {statusFilter === 'ACTIVE' && !readOnly && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -178,11 +174,17 @@ const DepositManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(deposit.depositDate)}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {deposit.returnDate ? formatDate(deposit.returnDate) : '-'}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {deposit.durationDays ? `${deposit.durationDays} days (${deposit.durationMonths} months)` : '-'}
+                      {deposit.durationDays ? `${deposit.durationMonths} months ${deposit.durationDays} days` : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                       {deposit.interestRate}%
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
+                      {formatCurrency((deposit.amount * deposit.interestRate) / 100)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                       {formatCurrency(deposit.currentInterest || deposit.interestEarned)}
@@ -203,7 +205,7 @@ const DepositManagement = () => {
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {deposit.notes ? deposit.notes.substring(0, 50) + (deposit.notes.length > 50 ? '...' : '') : '-'}
                     </td>
-                    {statusFilter === 'ACTIVE' && (
+                    {statusFilter === 'ACTIVE' && !readOnly && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button
@@ -261,8 +263,8 @@ const DepositManagement = () => {
         </div>
       </div>
 
-      {showForm && <DepositForm deposit={editingDeposit} onClose={handleFormClose} />}
-      {returningDeposit && <DepositReturn deposit={returningDeposit} onClose={handleReturnComplete} />}
+      {!readOnly && showForm && <DepositForm deposit={editingDeposit} onClose={handleFormClose} />}
+      {!readOnly && returningDeposit && <DepositReturn deposit={returningDeposit} onClose={handleReturnComplete} />}
     </div>
   );
 };

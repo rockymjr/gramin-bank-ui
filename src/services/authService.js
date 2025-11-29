@@ -16,10 +16,16 @@ export const authService = {
   },
 
   isAuthenticated: () => {
-    return !!localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    return !!(token && token.trim().length > 0);
   },
 
   getUsername: () => {
     return localStorage.getItem('username');
+  },
+
+  clearAuth: () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
   }
 };

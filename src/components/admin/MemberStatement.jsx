@@ -5,7 +5,7 @@ import { formatDate } from '../../utils/dateFormatter';
 import { Search, FileText, Download } from 'lucide-react';
 import Loader from '../common/Loader';
 
-const MemberStatement = () => {
+const MemberStatement = ({ readOnly }) => {
   const [members, setMembers] = useState([]);
   const [selectedMemberId, setSelectedMemberId] = useState('');
   const [year, setYear] = useState(null);
@@ -109,11 +109,11 @@ const MemberStatement = () => {
 
           <button
             type="submit"
-            disabled={loading || loadingMembers}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition disabled:opacity-50"
+            disabled={loading || loadingMembers || readOnly}
+            className={`bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition disabled:opacity-50 ${readOnly ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
             <Search size={20} />
-            <span>{loading ? 'Loading...' : 'Fetch Statement'}</span>
+            <span>{loading ? 'Loading...' : readOnly ? 'Read Only' : 'Fetch Statement'}</span>
           </button>
         </form>
       </div>

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMemberAuth } from '../../context/MemberAuthContext';
-import { Home, User, LogOut, Menu, X, Users as UsersIcon, TrendingUp, TrendingDown, FileText, Calendar } from 'lucide-react';
+import { Home, User, LogOut, Menu, X, Users as UsersIcon, TrendingUp, TrendingDown, FileText, Calendar, Lock } from 'lucide-react';
 
 const Navbar = () => {
   const { isAuthenticated: isAdmin, username: adminUsername, logout: adminLogout } = useAuth();
-  const { isAuthenticated: isMember, memberName, logout: memberLogout } = useMemberAuth();
+  const { isAuthenticated: isMember, memberName, isOperator, logout: memberLogout } = useMemberAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,6 +24,7 @@ const Navbar = () => {
   };
 
   const isMemberRoute = location.pathname.startsWith('/member');
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   // Admin menu items
   const adminMenuItems = [
@@ -34,38 +35,66 @@ const Navbar = () => {
     { title: 'Reports', icon: Calendar, link: '/admin/reports' }
   ];
 
+  // Operator menu items (read-only, public pages)
+  const operatorMenuItems = [
+    { title: 'Deposits', icon: TrendingUp, link: '/admin/deposits' },
+    { title: 'Loans', icon: TrendingDown, link: '/loans' },
+    { title: 'Statements', icon: FileText, link: '/statements' } // If you have a public statements page, otherwise remove or adjust
+  ];
+
+  // Determine what to show in navbar
+  const showLoginButtons = !isAdmin && !isMember;
+  const showAdminMenu = isAdmin;
+  const showMemberMenu = isMember && !isOperator;
+  const showOperatorMenu = isMember && isOperator;
+  
+  // Debug: Log the authentication state
+  React.useEffect(() => {
+    console.log('Navbar updated - isAdmin:', isAdmin, 'isMember:', isMember, 'isOperator:', isOperator);
+    console.log('localStorage.authToken:', localStorage.getItem('authToken'));
+    console.log('localStorage.memberToken:', localStorage.getItem('memberToken'));
+    console.log('localStorage.isOperator:', localStorage.getItem('isOperator'));
+    console.log('showLoginButtons:', showLoginButtons, 'showOperatorMenu:', showOperatorMenu);
+  }, [isAdmin, isMember, isOperator, location.pathname]);
+
   return (
     <nav className="bg-green-600 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
-            <Home size={24} />
-            <span className="text-lg sm:text-xl font-bold">Dhuripara Gramin Bank</span>
-          </Link>
+          {/* Logo and User Info */}
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
+              <Home size={24} />
+              <span className="text-lg sm:text-xl font-bold">Dhuripara Gramin Bank</span>
+            </Link>
+            
+            {/* Show admin or member name on left */}
+            {isAdmin && (
+              <span className="text-green-200 text-sm border-l border-green-400 pl-4">Admin: {adminUsername}</span>
+            )}
+            {isMember && (
+              <span className="text-green-200 text-sm border-l border-green-400 pl-4">
+                {isOperator ? `${memberName} (Operator)` : memberName}
+              </span>
+            )}
+          </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            {!isAdmin && !isMember ? (
+            {showLoginButtons && (
               <>
                 <Link 
-                  to="/admin/login" 
-                  className="flex items-center space-x-1 bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition"
+                  to="/login" 
+                  className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition text-white"
                 >
                   <User size={18} />
-                  <span>Admin Login</span>
-                </Link>
-                <Link 
-                  to="/member/login" 
-                  className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition"
-                >
-                  <UsersIcon size={18} />
-                  <span>Member Login</span>
+                  <span>Login</span>
                 </Link>
               </>
-            ) : isAdmin && !isMemberRoute ? (
+            )}
+            
+            {showAdminMenu && (
               <>
-                {/* Admin Menu Items */}
                 {adminMenuItems.map((item, index) => {
                   const Icon = item.icon;
                   return (
@@ -80,7 +109,6 @@ const Navbar = () => {
                   );
                 })}
                 <div className="border-l border-green-400 h-6 mx-2"></div>
-                <span className="text-green-200 text-sm">Admin: {adminUsername}</span>
                 <button
                   onClick={handleAdminLogout}
                   className="flex items-center space-x-1 bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
@@ -89,15 +117,17 @@ const Navbar = () => {
                   <span>Logout</span>
                 </button>
               </>
-            ) : isMember && isMemberRoute ? (
+            )}
+            
+            {showMemberMenu && (
               <div className="flex items-center space-x-4">
                 <Link 
                   to="/member/dashboard" 
-                  className="hover:text-green-200 transition"
+                  className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition text-white"
                 >
-                  My Dashboard
+                  <Home size={18} />
+                  <span>My Dashboard</span>
                 </Link>
-                <span className="text-green-200 text-sm">{memberName}</span>
                 <button
                   onClick={handleMemberLogout}
                   className="flex items-center space-x-1 bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
@@ -106,7 +136,34 @@ const Navbar = () => {
                   <span>Logout</span>
                 </button>
               </div>
-            ) : null}
+            )}
+
+            {showOperatorMenu && (
+              <div className="flex items-center space-x-4">
+                {operatorMenuItems.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={index}
+                      to={item.link}
+                      className="flex items-center space-x-1 text-green-200 opacity-80 cursor-pointer hover:text-green-100"
+                      title="Read-only access"
+                    >
+                      <Icon size={18} />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
+                <div className="border-l border-green-400 h-6 mx-2"></div>
+                <button
+                  onClick={handleMemberLogout}
+                  className="flex items-center space-x-1 bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
+                >
+                  <LogOut size={18} />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -121,30 +178,21 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-2">
-            {!isAdmin && !isMember ? (
+            {showLoginButtons && (
               <>
                 <Link 
-                  to="/admin/login" 
-                  className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 px-4 py-3 rounded transition"
+                  to="/login" 
+                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded transition text-white"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <User size={20} />
-                  <span>Admin Login</span>
-                </Link>
-                <Link 
-                  to="/member/login" 
-                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded transition"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <UsersIcon size={20} />
-                  <span>Member Login</span>
+                  <span>Login</span>
                 </Link>
               </>
-            ) : isAdmin && !isMemberRoute ? (
+            )}
+            
+            {showAdminMenu && (
               <>
-                <div className="px-4 py-2 text-green-200 text-sm">
-                  Admin: {adminUsername}
-                </div>
                 {adminMenuItems.map((item, index) => {
                   const Icon = item.icon;
                   return (
@@ -167,17 +215,17 @@ const Navbar = () => {
                   <span>Logout</span>
                 </button>
               </>
-            ) : isMember && isMemberRoute ? (
+            )}
+            
+            {showMemberMenu && (
               <>
-                <div className="px-4 py-2 text-green-200 text-sm">
-                  {memberName}
-                </div>
                 <Link 
                   to="/member/dashboard" 
-                  className="block px-4 py-3 hover:bg-green-700 rounded transition"
+                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded transition text-white"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  My Dashboard
+                  <Home size={20} />
+                  <span>My Dashboard</span>
                 </Link>
                 <button
                   onClick={handleMemberLogout}
@@ -187,7 +235,34 @@ const Navbar = () => {
                   <span>Logout</span>
                 </button>
               </>
-            ) : null}
+            )}
+
+            {showOperatorMenu && (
+              <>
+                {operatorMenuItems.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={index}
+                      to={item.link}
+                      className="flex items-center space-x-2 px-4 py-3 text-green-200 opacity-80 cursor-pointer hover:text-green-100"
+                      title="Read-only access"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Icon size={20} />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
+                <button
+                  onClick={handleMemberLogout}
+                  className="flex items-center space-x-2 w-full bg-red-500 hover:bg-red-600 px-4 py-3 rounded transition"
+                >
+                  <LogOut size={20} />
+                  <span>Logout</span>
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>

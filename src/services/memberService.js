@@ -7,6 +7,7 @@ export const memberService = {
       localStorage.setItem('memberToken', response.data.token);
       localStorage.setItem('memberId', response.data.memberId);
       localStorage.setItem('memberName', response.data.memberName);
+      localStorage.setItem('isOperator', response.data.isOperator || false);
     }
     return response.data;
   },
@@ -15,14 +16,27 @@ export const memberService = {
     localStorage.removeItem('memberToken');
     localStorage.removeItem('memberId');
     localStorage.removeItem('memberName');
+    localStorage.removeItem('isOperator');
   },
 
   isAuthenticated: () => {
-    return !!localStorage.getItem('memberToken');
+    const token = localStorage.getItem('memberToken');
+    return !!(token && token.trim().length > 0);
   },
 
   getMemberName: () => {
     return localStorage.getItem('memberName');
+  },
+
+  isOperator: () => {
+    return localStorage.getItem('isOperator') === 'true';
+  },
+
+  clearAuth: () => {
+    localStorage.removeItem('memberToken');
+    localStorage.removeItem('memberId');
+    localStorage.removeItem('memberName');
+    localStorage.removeItem('isOperator');
   },
 
   getDashboard: async () => {

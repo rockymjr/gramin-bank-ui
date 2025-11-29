@@ -6,6 +6,7 @@ import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import MemberProtectedRoute from './components/common/MemberProtectedRoute';
+import UnifiedLogin from './components/common/UnifiedLogin';
 
 // Public Pages
 import Summary from './components/public/Summary';
@@ -18,6 +19,7 @@ import MemberManagement from './components/admin/MemberManagement';
 import DepositManagement from './components/admin/DepositManagement';
 import LoanManagement from './components/admin/LoanManagement';
 import MemberStatement from './components/admin/MemberStatement';
+
 import YearlyReport from './components/admin/YearlyReport';
 
 // Member Pages
@@ -52,6 +54,7 @@ const HomePage = () => {
   );
 };
 
+
 function App() {
   return (
     <AuthProvider>
@@ -60,77 +63,89 @@ function App() {
           <div className="flex flex-col min-h-screen bg-gray-50">
             <Navbar />
             <main className="flex-grow">
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/deposits" element={<DepositList />} />
-                <Route path="/loans" element={<LoanList />} />
-
-                {/* Admin Routes */}
-                <Route path="/admin/login" element={<Login />} />
-                {/* Removed /admin/dashboard - redirect to members */}
-                <Route path="/admin/dashboard" element={<Navigate to="/admin/members" replace />} />
-                <Route
-                  path="/admin/members"
-                  element={
-                    <ProtectedRoute>
-                      <MemberManagement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/deposits"
-                  element={
-                    <ProtectedRoute>
-                      <DepositManagement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/loans"
-                  element={
-                    <ProtectedRoute>
-                      <LoanManagement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/statements"
-                  element={
-                    <ProtectedRoute>
-                      <MemberStatement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/reports"
-                  element={
-                    <ProtectedRoute>
-                      <YearlyReport />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Member Routes */}
-                <Route path="/member/login" element={<MemberLogin />} />
-                <Route
-                  path="/member/dashboard"
-                  element={
-                    <MemberProtectedRoute>
-                      <MemberDashboard />
-                    </MemberProtectedRoute>
-                  }
-                />
-
-                {/* Fallback */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+              <AppRoutes />
             </main>
             <Footer />
           </div>
         </Router>
       </MemberAuthProvider>
     </AuthProvider>
+  );
+}
+
+// AppRoutes is rendered inside MemberAuthProvider, so hooks are safe here
+import { useMemberAuth } from './context/MemberAuthContext';
+function AppRoutes() {
+  const { isOperator } = useMemberAuth() || {};
+  return (
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/deposits" element={<DepositList />} />
+      <Route path="/loans" element={<LoanList />} />
+
+      {/* Unified Login Route */}
+      <Route path="/login" element={<UnifiedLogin />} />
+
+      {/* Admin Routes */}
+      <Route path="/admin/login" element={<Login />} />
+      {/* Removed /admin/dashboard - redirect to members */}
+      <Route path="/admin/dashboard" element={<Navigate to="/admin/members" replace />} />
+      <Route
+        path="/admin/members"
+        element={
+          <ProtectedRoute>
+            <MemberManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/deposits"
+        element={
+          isOperator
+            ? <DepositManagement readOnly={true} />
+            : <ProtectedRoute><DepositManagement readOnly={false} /></ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/loans"
+        element={
+          <ProtectedRoute>
+            <LoanManagement readOnly={!!isOperator} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/statements"
+        element={
+          <ProtectedRoute>
+            <MemberStatement readOnly={!!isOperator} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reports"
+        element={
+          <ProtectedRoute>
+            <YearlyReport />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Member Routes */}
+      <Route path="/member/login" element={<MemberLogin />} />
+      <Route
+        path="/member/dashboard"
+        element={
+          <MemberProtectedRoute>
+            <MemberDashboard />
+          </MemberProtectedRoute>
+        }
+      />
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
