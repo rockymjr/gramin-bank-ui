@@ -7,8 +7,7 @@ const MemberForm = ({ member, onClose }) => {
     firstName: '',
     lastName: '',
     phone: '',
-    address: '',
-    pin: ''  // NEW FIELD
+    pin: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -20,7 +19,6 @@ const MemberForm = ({ member, onClose }) => {
         firstName: member.firstName || '',
         lastName: member.lastName || '',
         phone: member.phone || '',
-        address: member.address || '',
         pin: member.pin || ''
       });
     }

@@ -6,7 +6,7 @@ import { Calendar, Download } from 'lucide-react';
 import Loader from '../common/Loader';
 
 const YearlyReport = () => {
-  const [year, setYear] = useState(new Date().getFullYear().toString());
+  const [year, setYear] = useState(null);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -50,7 +50,7 @@ const YearlyReport = () => {
               onChange={(e) => setYear(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              {[2025, 2024, 2023, 2022, 2021, 2020].map((y) => (
+              {["2025-26", "2024-25"].map((y) => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>

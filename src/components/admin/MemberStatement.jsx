@@ -8,7 +8,7 @@ import Loader from '../common/Loader';
 const MemberStatement = () => {
   const [members, setMembers] = useState([]);
   const [selectedMemberId, setSelectedMemberId] = useState('');
-  const [year, setYear] = useState(new Date().getFullYear().toString());
+  const [year, setYear] = useState(null);
   const [statement, setStatement] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingMembers, setLoadingMembers] = useState(true);
@@ -100,7 +100,7 @@ const MemberStatement = () => {
                 onChange={(e) => setYear(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                {[2025, 2024, 2023, 2022, 2021].map((y) => (
+                {["2025-26", "2024-25"].map((y) => (
                   <option key={y} value={y}>{y}</option>
                 ))}
               </select>

@@ -3,7 +3,6 @@ const translations = {
   en: {
     // App
     appName: 'Dhuripara Gramin Bank',
-    welcome: 'Welcome to Village Fund',
     
     // Navigation
     home: 'Home',
@@ -42,7 +41,6 @@ const translations = {
     lastName: 'Last Name',
     phone: 'Phone Number',
     pin: 'PIN',
-    address: 'Address',
     joiningDate: 'Joining Date',
     status: 'Status',
     memberName: 'Member Name',
@@ -74,7 +72,6 @@ const translations = {
     closed: 'Closed',
     returned: 'Returned',
     settled: 'Settled',
-    carriedForward: 'Carried Forward',
     inactive: 'Inactive',
     
     // Login
@@ -102,7 +99,6 @@ const translations = {
   hi: {
     // App
     appName: 'धुरीपाड़ा ग्रामीण बैंक',
-    welcome: 'ग्राम निधि में आपका स्वागत है',
     
     // Navigation
     home: 'होम',
@@ -141,7 +137,6 @@ const translations = {
     lastName: 'अंतिम नाम',
     phone: 'फ़ोन नंबर',
     pin: 'पिन',
-    address: 'पता',
     joiningDate: 'शामिल होने की तारीख',
     status: 'स्थिति',
     memberName: 'सदस्य का नाम',
@@ -173,7 +168,6 @@ const translations = {
     closed: 'बंद',
     returned: 'वापस किया गया',
     settled: 'निपटान',
-    carriedForward: 'आगे बढ़ाया गया',
     inactive: 'निष्क्रिय',
     
     // Login
@@ -200,12 +194,11 @@ const translations = {
   
   bn: {
     // App
-    appName: 'ধুরীপাড়া গ্রামীণ ব্যাংক',
-    welcome: 'গ্রাম তহবিলে আপনাকে স্বাগতম',
+    appName: 'ঢুড়িপাড়া গ্রামীণ ব্যাংক',
     
     // Navigation
     home: 'হোম',
-    deposits: 'আমানত',
+    deposits: 'জমা',
     loans: 'ঋণ',
     admin: 'প্রশাসক',
     memberLogin: 'সদস্য লগইন',
@@ -213,52 +206,51 @@ const translations = {
     dashboard: 'ড্যাশবোর্ড',
     
     // Common
-    save: 'সংরক্ষণ করুন',
-    cancel: 'বাতিল',
-    delete: 'মুছুন',
-    edit: 'সম্পাদনা',
+    save: 'save',
+    cancel: 'cancel',
+    delete: 'delete',
+    edit: 'edit',
     view: 'দেখুন',
     search: 'খুঁজুন',
     filter: 'ফিল্টার',
     loading: 'লোড হচ্ছে...',
     submit: 'জমা দিন',
     close: 'বন্ধ করুন',
-    actions: 'কর্ম',
+    actions: 'action',
     
     // Dashboard
-    totalDeposits: 'মোট আমানত',
+    totalDeposits: 'মোট জমা',
     totalLoans: 'মোট ঋণ',
-    availableBalance: 'উপলব্ধ ব্যালেন্স',
-    activeDeposits: 'সক্রিয় আমানত',
-    activeLoans: 'সক্রিয় ঋণ',
-    financialYear: 'আর্থিক বছর',
+    availableBalance: 'বর্তমান ব্যালেন্স',
+    activeDeposits: 'বর্তমান জমা',
+    activeLoans: 'বর্তমান ঋণ',
+    financialYear: 'বছর',
     
     // Members
     members: 'সদস্য',
     addMember: 'সদস্য যোগ করুন',
-    firstName: 'প্রথম নাম',
-    lastName: 'শেষ নাম',
+    firstName: 'নাম',
+    lastName: 'শিরোনাম',
     phone: 'ফোন নম্বর',
     pin: 'পিন',
-    address: 'ঠিকানা',
     joiningDate: 'যোগদানের তারিখ',
     status: 'অবস্থা',
     memberName: 'সদস্যের নাম',
     
     // Deposits
-    addDeposit: 'আমানত যোগ করুন',
-    amount: 'পরিমাণ',
-    depositDate: 'আমানতের তারিখ',
+    addDeposit: 'জমা করুন',
+    amount: 'টাকা',
+    depositDate: 'জমা তারিখ',
     interestRate: 'সুদের হার',
     interestEarned: 'অর্জিত সুদ',
     currentInterest: 'বর্তমান সুদ',
-    totalAmount: 'মোট পরিমাণ',
-    returnDeposit: 'আমানত ফেরত',
-    currentTotal: 'বর্তমান মোট',
+    totalAmount: 'মোট জমা',
+    returnDeposit: 'জমা ফেরত',
+    currentTotal: 'বর্তমান মোট টাকা',
     
     // Loans
     sanctionLoan: 'ঋণ অনুমোদন করুন',
-    loanAmount: 'ঋণের পরিমাণ',
+    loanAmount: 'ঋণের টাকা',
     loanDate: 'ঋণের তারিখ',
     interestPaid: 'প্রদত্ত সুদ',
     paidAmount: 'প্রদত্ত পরিমাণ',
@@ -272,19 +264,18 @@ const translations = {
     closed: 'বন্ধ',
     returned: 'ফেরত দেওয়া হয়েছে',
     settled: 'নিষ্পত্তি',
-    carriedForward: 'এগিয়ে নিয়ে যাওয়া',
     inactive: 'নিষ্ক্রিয়',
     
     // Login
     loginTitle: 'লগইন',
-    username: 'ব্যবহারকারীর নাম',
-    password: 'পাসওয়ার্ড',
-    memberLoginTitle: 'সদস্য লগইন',
-    adminLogin: 'প্রশাসক লগইন',
+    username: 'Username',
+    password: 'Password',
+    memberLoginTitle: 'Member Login',
+    adminLogin: 'Admin Login',
     
     // Messages
     success: 'সফল',
-    error: 'ত্রুটি',
+    error: 'Error',
     created: 'সফলভাবে তৈরি হয়েছে',
     updated: 'সফলভাবে আপডেট হয়েছে',
     deleted: 'সফলভাবে মুছে ফেলা হয়েছে',

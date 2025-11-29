@@ -1,16 +1,12 @@
-// src/components/common/Navbar.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMemberAuth } from '../../context/MemberAuthContext';
-import { useLanguage } from '../../context/LanguageContext';
-import { Home, User, LogOut, Menu, X, Users } from 'lucide-react';
-import LanguageSwitcher from './LanguageSwitcher';
+import { Home, User, LogOut, Menu, X, Users as UsersIcon, TrendingUp, TrendingDown, FileText, Calendar } from 'lucide-react';
 
 const Navbar = () => {
   const { isAuthenticated: isAdmin, username: adminUsername, logout: adminLogout } = useAuth();
   const { isAuthenticated: isMember, memberName, logout: memberLogout } = useMemberAuth();
-  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,6 +25,15 @@ const Navbar = () => {
 
   const isMemberRoute = location.pathname.startsWith('/member');
 
+  // Admin menu items
+  const adminMenuItems = [
+    { title: 'Members', icon: UsersIcon, link: '/admin/members' },
+    { title: 'Deposits', icon: TrendingUp, link: '/admin/deposits' },
+    { title: 'Loans', icon: TrendingDown, link: '/admin/loans' },
+    { title: 'Statements', icon: FileText, link: '/admin/statements' },
+    { title: 'Reports', icon: Calendar, link: '/admin/reports' }
+  ];
+
   return (
     <nav className="bg-green-600 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -36,13 +41,11 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
             <Home size={24} />
-            <span className="text-lg sm:text-xl font-bold">{t('appName')}</span>
+            <span className="text-lg sm:text-xl font-bold">Dhuripara Gramin Bank</span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <LanguageSwitcher />
-            
             {!isAdmin && !isMember ? (
               <>
                 <Link 
@@ -50,40 +53,49 @@ const Navbar = () => {
                   className="flex items-center space-x-1 bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition"
                 >
                   <User size={18} />
-                  <span>{t('adminLogin')}</span>
+                  <span>Admin Login</span>
                 </Link>
                 <Link 
                   to="/member/login" 
                   className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition"
                 >
-                  <Users size={18} />
-                  <span>{t('memberLogin')}</span>
+                  <UsersIcon size={18} />
+                  <span>Member Login</span>
                 </Link>
               </>
             ) : isAdmin && !isMemberRoute ? (
-              <div className="flex items-center space-x-4">
-                <Link 
-                  to="/admin/dashboard" 
-                  className="hover:text-green-200 transition"
-                >
-                  {t('dashboard')}
-                </Link>
-                <span className="text-green-200 text-sm">{t('admin')}: {adminUsername}</span>
+              <>
+                {/* Admin Menu Items */}
+                {adminMenuItems.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link 
+                      key={index}
+                      to={item.link} 
+                      className="flex items-center space-x-1 hover:text-green-200 transition"
+                    >
+                      <Icon size={18} />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
+                <div className="border-l border-green-400 h-6 mx-2"></div>
+                <span className="text-green-200 text-sm">Admin: {adminUsername}</span>
                 <button
                   onClick={handleAdminLogout}
                   className="flex items-center space-x-1 bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
                 >
                   <LogOut size={18} />
-                  <span>{t('logout')}</span>
+                  <span>Logout</span>
                 </button>
-              </div>
+              </>
             ) : isMember && isMemberRoute ? (
               <div className="flex items-center space-x-4">
                 <Link 
                   to="/member/dashboard" 
                   className="hover:text-green-200 transition"
                 >
-                  {t('dashboard')}
+                  My Dashboard
                 </Link>
                 <span className="text-green-200 text-sm">{memberName}</span>
                 <button
@@ -91,7 +103,7 @@ const Navbar = () => {
                   className="flex items-center space-x-1 bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
                 >
                   <LogOut size={18} />
-                  <span>{t('logout')}</span>
+                  <span>Logout</span>
                 </button>
               </div>
             ) : null}
@@ -109,10 +121,6 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-2">
-            <div className="flex justify-center mb-3">
-              <LanguageSwitcher />
-            </div>
-            
             {!isAdmin && !isMember ? (
               <>
                 <Link 
@@ -121,35 +129,42 @@ const Navbar = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <User size={20} />
-                  <span>{t('adminLogin')}</span>
+                  <span>Admin Login</span>
                 </Link>
                 <Link 
                   to="/member/login" 
                   className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded transition"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <Users size={20} />
-                  <span>{t('memberLogin')}</span>
+                  <UsersIcon size={20} />
+                  <span>Member Login</span>
                 </Link>
               </>
             ) : isAdmin && !isMemberRoute ? (
               <>
                 <div className="px-4 py-2 text-green-200 text-sm">
-                  {t('admin')}: {adminUsername}
+                  Admin: {adminUsername}
                 </div>
-                <Link 
-                  to="/admin/dashboard" 
-                  className="block px-4 py-3 hover:bg-green-700 rounded transition"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('dashboard')}
-                </Link>
+                {adminMenuItems.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link 
+                      key={index}
+                      to={item.link} 
+                      className="flex items-center space-x-2 px-4 py-3 hover:bg-green-700 rounded transition"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Icon size={20} />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
                 <button
                   onClick={handleAdminLogout}
                   className="flex items-center space-x-2 w-full bg-red-500 hover:bg-red-600 px-4 py-3 rounded transition"
                 >
                   <LogOut size={20} />
-                  <span>{t('logout')}</span>
+                  <span>Logout</span>
                 </button>
               </>
             ) : isMember && isMemberRoute ? (
@@ -162,14 +177,14 @@ const Navbar = () => {
                   className="block px-4 py-3 hover:bg-green-700 rounded transition"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {t('dashboard')}
+                  My Dashboard
                 </Link>
                 <button
                   onClick={handleMemberLogout}
                   className="flex items-center space-x-2 w-full bg-red-500 hover:bg-red-600 px-4 py-3 rounded transition"
                 >
                   <LogOut size={20} />
-                  <span>{t('logout')}</span>
+                  <span>Logout</span>
                 </button>
               </>
             ) : null}

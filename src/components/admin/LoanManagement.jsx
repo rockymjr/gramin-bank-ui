@@ -129,19 +129,6 @@ const LoanManagement = () => {
         >
           Settled
         </button>
-        <button
-          onClick={() => {
-            setStatusFilter('CARRIED_FORWARD');
-            setPage(0);
-          }}
-          className={`px-4 py-2 rounded-lg transition ${
-            statusFilter === 'CARRIED_FORWARD'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Carried Forward
-        </button>
       </div>
     </div>
   </div>
@@ -189,11 +176,6 @@ const LoanManagement = () => {
               <tr key={loan.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {loan.memberName}
-                  {loan.carriedForward && (
-                    <span className="ml-2 px-2 py-0.5 text-xs bg-purple-100 text-purple-800 rounded">
-                      CF
-                    </span>
-                  )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {formatCurrency(loan.loanAmount)}
@@ -229,11 +211,9 @@ const LoanManagement = () => {
                       ? 'bg-yellow-100 text-yellow-800' 
                       : loan.status === 'CLOSED'
                       ? 'bg-blue-100 text-blue-800'
-                      : loan.status === 'CARRIED_FORWARD'
-                      ? 'bg-purple-100 text-purple-800'
                       : 'bg-gray-100 text-gray-800'
                   }`}>
-                    {loan.status === 'CARRIED_FORWARD' ? 'CARRIED FWD' : loan.status}
+                    { loan.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

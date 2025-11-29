@@ -1,6 +1,8 @@
+// src/components/public/Summary.jsx
 import React, { useEffect, useState } from 'react';
 import { publicService } from '../../services/publicService';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { useLanguage } from '../../context/LanguageContext';
 import Loader from '../common/Loader';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
@@ -8,6 +10,7 @@ const Summary = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchSummary();
@@ -26,28 +29,21 @@ const Summary = () => {
     }
   };
 
-  if (loading) return <Loader message="Loading summary..." />;
+  if (loading) return <Loader message={t('loading')} />;
   if (error) return <div className="text-red-500 text-center py-8 px-4">{error}</div>;
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
-      <div className="text-center mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
-          Village Fund Summary
-        </h1>
-        <p className="text-sm sm:text-base text-gray-600">Financial Year: {summary?.financialYear}</p>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Total Deposits Card */}
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-4 sm:p-6 text-white">
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <TrendingUp size={28} className="sm:w-8 sm:h-8" />
             <span className="text-xs sm:text-sm bg-white bg-opacity-20 px-2 sm:px-3 py-1 rounded-full">
-              {summary?.activeDepositsCount} Active
+              {summary?.activeDepositsCount} {t('active')}
             </span>
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Total Deposits</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('totalDeposits')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.totalDeposits)}
           </p>
@@ -58,10 +54,10 @@ const Summary = () => {
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <TrendingDown size={28} className="sm:w-8 sm:h-8" />
             <span className="text-xs sm:text-sm bg-white bg-opacity-20 px-2 sm:px-3 py-1 rounded-full">
-              {summary?.activeLoansCount} Active
+              {summary?.activeLoansCount} {t('active')}
             </span>
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Total Loans</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('totalLoans')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.totalLoans)}
           </p>
@@ -72,7 +68,7 @@ const Summary = () => {
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <Wallet size={28} className="sm:w-8 sm:h-8" />
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Available Balance</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('availableBalance')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.availableBalance)}
           </p>
