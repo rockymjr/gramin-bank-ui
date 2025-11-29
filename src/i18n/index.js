@@ -1,0 +1,301 @@
+// src/i18n/index.js
+const translations = {
+  en: {
+    // App
+    appName: 'Dhuripara Gramin Bank',
+    welcome: 'Welcome to Village Fund',
+    
+    // Navigation
+    home: 'Home',
+    deposits: 'Deposits',
+    loans: 'Loans',
+    admin: 'Admin',
+    memberLogin: 'Member Login',
+    logout: 'Logout',
+    dashboard: 'Dashboard',
+    
+    // Common
+    save: 'Save',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    edit: 'Edit',
+    view: 'View',
+    search: 'Search',
+    filter: 'Filter',
+    loading: 'Loading...',
+    submit: 'Submit',
+    close: 'Close',
+    actions: 'Actions',
+    
+    // Dashboard
+    totalDeposits: 'Total Deposits',
+    totalLoans: 'Total Loans',
+    availableBalance: 'Available Balance',
+    activeDeposits: 'Active Deposits',
+    activeLoans: 'Active Loans',
+    financialYear: 'Financial Year',
+    
+    // Members
+    members: 'Members',
+    addMember: 'Add Member',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    phone: 'Phone Number',
+    pin: 'PIN',
+    address: 'Address',
+    joiningDate: 'Joining Date',
+    status: 'Status',
+    memberName: 'Member Name',
+    
+    // Deposits
+    addDeposit: 'Add Deposit',
+    amount: 'Amount',
+    depositDate: 'Deposit Date',
+    interestRate: 'Interest Rate',
+    interestEarned: 'Interest Earned',
+    currentInterest: 'Current Interest',
+    totalAmount: 'Total Amount',
+    returnDeposit: 'Return Deposit',
+    currentTotal: 'Current Total',
+    
+    // Loans
+    sanctionLoan: 'Sanction Loan',
+    loanAmount: 'Loan Amount',
+    loanDate: 'Loan Date',
+    interestPaid: 'Interest Paid',
+    paidAmount: 'Paid Amount',
+    remainingAmount: 'Remaining Amount',
+    addPayment: 'Add Payment',
+    closeLoan: 'Close Loan',
+    paymentHistory: 'Payment History',
+    
+    // Status
+    active: 'Active',
+    closed: 'Closed',
+    returned: 'Returned',
+    settled: 'Settled',
+    carriedForward: 'Carried Forward',
+    inactive: 'Inactive',
+    
+    // Login
+    loginTitle: 'Login',
+    username: 'Username',
+    password: 'Password',
+    memberLoginTitle: 'Member Login',
+    adminLogin: 'Admin Login',
+    
+    // Messages
+    success: 'Success',
+    error: 'Error',
+    created: 'Created successfully',
+    updated: 'Updated successfully',
+    deleted: 'Deleted successfully',
+    notFound: 'Not found',
+    
+    // Validation
+    required: 'This field is required',
+    invalidPhone: 'Phone must be 10 digits',
+    invalidPin: 'PIN must be 4 digits',
+    amountPositive: 'Amount must be greater than 0',
+  },
+  
+  hi: {
+    // App
+    appName: 'धुरीपाड़ा ग्रामीण बैंक',
+    welcome: 'ग्राम निधि में आपका स्वागत है',
+    
+    // Navigation
+    home: 'होम',
+    deposits: 'जमा',
+    loans: 'ऋण',
+    admin: 'प्रशासक',
+    memberLogin: 'सदस्य लॉगिन',
+    logout: 'लॉग आउट',
+    dashboard: 'डैशबोर्ड',
+    
+    // Common
+    save: 'सहेजें',
+    cancel: 'रद्द करें',
+    delete: 'हटाएं',
+    edit: 'संपादित करें',
+    view: 'देखें',
+    search: 'खोजें',
+    filter: 'फ़िल्टर',
+    loading: 'लोड हो रहा है...',
+    submit: 'जमा करें',
+    close: 'बंद करें',
+    actions: 'क्रियाएं',
+    
+    // Dashboard
+    totalDeposits: 'कुल जमा',
+    totalLoans: 'कुल ऋण',
+    availableBalance: 'उपलब्ध शेष',
+    activeDeposits: 'सक्रिय जमा',
+    activeLoans: 'सक्रिय ऋण',
+    financialYear: 'वित्तीय वर्ष',
+    
+    // Members
+    members: 'सदस्य',
+    addMember: 'सदस्य जोड़ें',
+    firstName: 'पहला नाम',
+    lastName: 'अंतिम नाम',
+    phone: 'फ़ोन नंबर',
+    pin: 'पिन',
+    address: 'पता',
+    joiningDate: 'शामिल होने की तारीख',
+    status: 'स्थिति',
+    memberName: 'सदस्य का नाम',
+    
+    // Deposits
+    addDeposit: 'जमा जोड़ें',
+    amount: 'राशि',
+    depositDate: 'जमा तिथि',
+    interestRate: 'ब्याज दर',
+    interestEarned: 'अर्जित ब्याज',
+    currentInterest: 'वर्तमान ब्याज',
+    totalAmount: 'कुल राशि',
+    returnDeposit: 'जमा वापसी',
+    currentTotal: 'वर्तमान कुल',
+    
+    // Loans
+    sanctionLoan: 'ऋण स्वीकृत करें',
+    loanAmount: 'ऋण राशि',
+    loanDate: 'ऋण तिथि',
+    interestPaid: 'भुगतान किया गया ब्याज',
+    paidAmount: 'भुगतान की गई राशि',
+    remainingAmount: 'शेष राशि',
+    addPayment: 'भुगतान जोड़ें',
+    closeLoan: 'ऋण बंद करें',
+    paymentHistory: 'भुगतान इतिहास',
+    
+    // Status
+    active: 'सक्रिय',
+    closed: 'बंद',
+    returned: 'वापस किया गया',
+    settled: 'निपटान',
+    carriedForward: 'आगे बढ़ाया गया',
+    inactive: 'निष्क्रिय',
+    
+    // Login
+    loginTitle: 'लॉग इन',
+    username: 'उपयोगकर्ता नाम',
+    password: 'पासवर्ड',
+    memberLoginTitle: 'सदस्य लॉगिन',
+    adminLogin: 'प्रशासक लॉगिन',
+    
+    // Messages
+    success: 'सफलता',
+    error: 'त्रुटि',
+    created: 'सफलतापूर्वक बनाया गया',
+    updated: 'सफलतापूर्वक अपडेट किया गया',
+    deleted: 'सफलतापूर्वक हटाया गया',
+    notFound: 'नहीं मिला',
+    
+    // Validation
+    required: 'यह फ़ील्ड आवश्यक है',
+    invalidPhone: 'फ़ोन 10 अंकों का होना चाहिए',
+    invalidPin: 'पिन 4 अंकों का होना चाहिए',
+    amountPositive: 'राशि 0 से अधिक होनी चाहिए',
+  },
+  
+  bn: {
+    // App
+    appName: 'ধুরীপাড়া গ্রামীণ ব্যাংক',
+    welcome: 'গ্রাম তহবিলে আপনাকে স্বাগতম',
+    
+    // Navigation
+    home: 'হোম',
+    deposits: 'আমানত',
+    loans: 'ঋণ',
+    admin: 'প্রশাসক',
+    memberLogin: 'সদস্য লগইন',
+    logout: 'লগ আউট',
+    dashboard: 'ড্যাশবোর্ড',
+    
+    // Common
+    save: 'সংরক্ষণ করুন',
+    cancel: 'বাতিল',
+    delete: 'মুছুন',
+    edit: 'সম্পাদনা',
+    view: 'দেখুন',
+    search: 'খুঁজুন',
+    filter: 'ফিল্টার',
+    loading: 'লোড হচ্ছে...',
+    submit: 'জমা দিন',
+    close: 'বন্ধ করুন',
+    actions: 'কর্ম',
+    
+    // Dashboard
+    totalDeposits: 'মোট আমানত',
+    totalLoans: 'মোট ঋণ',
+    availableBalance: 'উপলব্ধ ব্যালেন্স',
+    activeDeposits: 'সক্রিয় আমানত',
+    activeLoans: 'সক্রিয় ঋণ',
+    financialYear: 'আর্থিক বছর',
+    
+    // Members
+    members: 'সদস্য',
+    addMember: 'সদস্য যোগ করুন',
+    firstName: 'প্রথম নাম',
+    lastName: 'শেষ নাম',
+    phone: 'ফোন নম্বর',
+    pin: 'পিন',
+    address: 'ঠিকানা',
+    joiningDate: 'যোগদানের তারিখ',
+    status: 'অবস্থা',
+    memberName: 'সদস্যের নাম',
+    
+    // Deposits
+    addDeposit: 'আমানত যোগ করুন',
+    amount: 'পরিমাণ',
+    depositDate: 'আমানতের তারিখ',
+    interestRate: 'সুদের হার',
+    interestEarned: 'অর্জিত সুদ',
+    currentInterest: 'বর্তমান সুদ',
+    totalAmount: 'মোট পরিমাণ',
+    returnDeposit: 'আমানত ফেরত',
+    currentTotal: 'বর্তমান মোট',
+    
+    // Loans
+    sanctionLoan: 'ঋণ অনুমোদন করুন',
+    loanAmount: 'ঋণের পরিমাণ',
+    loanDate: 'ঋণের তারিখ',
+    interestPaid: 'প্রদত্ত সুদ',
+    paidAmount: 'প্রদত্ত পরিমাণ',
+    remainingAmount: 'অবশিষ্ট পরিমাণ',
+    addPayment: 'পেমেন্ট যোগ করুন',
+    closeLoan: 'ঋণ বন্ধ করুন',
+    paymentHistory: 'পেমেন্ট ইতিহাস',
+    
+    // Status
+    active: 'সক্রিয়',
+    closed: 'বন্ধ',
+    returned: 'ফেরত দেওয়া হয়েছে',
+    settled: 'নিষ্পত্তি',
+    carriedForward: 'এগিয়ে নিয়ে যাওয়া',
+    inactive: 'নিষ্ক্রিয়',
+    
+    // Login
+    loginTitle: 'লগইন',
+    username: 'ব্যবহারকারীর নাম',
+    password: 'পাসওয়ার্ড',
+    memberLoginTitle: 'সদস্য লগইন',
+    adminLogin: 'প্রশাসক লগইন',
+    
+    // Messages
+    success: 'সফল',
+    error: 'ত্রুটি',
+    created: 'সফলভাবে তৈরি হয়েছে',
+    updated: 'সফলভাবে আপডেট হয়েছে',
+    deleted: 'সফলভাবে মুছে ফেলা হয়েছে',
+    notFound: 'পাওয়া যায়নি',
+    
+    // Validation
+    required: 'এই ক্ষেত্রটি আবশ্যক',
+    invalidPhone: 'ফোন অবশ্যই 10 সংখ্যার হতে হবে',
+    invalidPin: 'পিন অবশ্যই 4 সংখ্যার হতে হবে',
+    amountPositive: 'পরিমাণ 0 এর চেয়ে বেশি হতে হবে',
+  }
+};
+
+export default translations;

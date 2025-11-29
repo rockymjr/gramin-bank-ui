@@ -3,11 +3,13 @@ import { memberService } from '../../services/memberService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
 import Loader from '../common/Loader';
-import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import ChangePinModal from './ChangePinModal';
+import { Wallet, TrendingUp, TrendingDown, DollarSign, Lock } from 'lucide-react';
 
 const MemberDashboard = () => {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showChangePinModal, setShowChangePinModal] = useState(false);
 
   useEffect(() => {
     fetchDashboard();
@@ -31,10 +33,20 @@ const MemberDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Welcome, {dashboard.memberName}</h1>
-        <p className="text-gray-600 mt-2">Phone: {dashboard.phone}</p>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Welcome, {dashboard.memberName}</h1>
+          <p className="text-gray-600 mt-2">Phone: {dashboard.phone}</p>
+        </div>
+        <button
+          onClick={() => setShowChangePinModal(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+        >
+          <Lock size={20} />
+          <span>Change PIN</span>
+        </button>
       </div>
+
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -139,13 +151,12 @@ const MemberDashboard = () => {
                         {deposit.currentInterest ? formatCurrency(deposit.currentInterest) : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          deposit.status === 'ACTIVE'
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${deposit.status === 'ACTIVE'
                             ? 'bg-green-100 text-green-800'
                             : deposit.status === 'RETURNED'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
                           {deposit.status}
                         </span>
                       </td>
@@ -218,13 +229,12 @@ const MemberDashboard = () => {
                         {formatCurrency(loan.remainingAmount)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                          loan.status === 'ACTIVE'
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${loan.status === 'ACTIVE'
                             ? 'bg-yellow-100 text-yellow-800'
                             : loan.status === 'CLOSED'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
                           {loan.status}
                         </span>
                       </td>
@@ -236,6 +246,12 @@ const MemberDashboard = () => {
           </div>
         </div>
       </div>
+      {showChangePinModal && (
+        <ChangePinModal onClose={(success) => {
+          setShowChangePinModal(false);
+          if (success) fetchDashboard();
+        }} />
+      )}
     </div>
   );
 };

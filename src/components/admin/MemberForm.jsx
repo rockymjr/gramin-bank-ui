@@ -207,23 +207,28 @@ const MemberForm = ({ member, onClose }) => {
               <p className="text-red-500 text-xs mt-1">{errors.pin}</p>
             )}
             <p className="text-xs text-gray-500 mt-1">
-              {formData.pin 
-                ? `Current PIN: ${formData.pin} - Share this with the member` 
-                : 'Member cannot login without a PIN'}
+              {formData.pin && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm text-blue-800 font-medium">
+                    Current PIN: {formData.pin}
+                  </p>
+    <p className="text-xs text-blue-600 mt-1">
+      Member can change PIN after first login
+    </p>
+  </div>
+)}
             </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Address
-            </label>
-            <textarea
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              rows="3"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              name="isOperator"
+              checked={formData.isOperator}
+              onChange={(e) => setFormData(prev => ({ ...prev, isOperator: e.target.checked }))}
+              className="..."
             />
+            <label className="text-sm">Make this member an Operator (view-only access)</label>
           </div>
 
           {formData.phone && formData.pin && (

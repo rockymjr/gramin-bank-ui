@@ -85,11 +85,10 @@ const DepositManagement = () => {
                 setStatusFilter('ACTIVE');
                 setPage(0);
               }}
-              className={`px-4 py-2 rounded-lg transition ${
-                statusFilter === 'ACTIVE'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-4 py-2 rounded-lg transition ${statusFilter === 'ACTIVE'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               Active
             </button>
@@ -98,11 +97,10 @@ const DepositManagement = () => {
                 setStatusFilter('RETURNED');
                 setPage(0);
               }}
-              className={`px-4 py-2 rounded-lg transition ${
-                statusFilter === 'RETURNED'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-4 py-2 rounded-lg transition ${statusFilter === 'RETURNED'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               Returned
             </button>
@@ -111,11 +109,10 @@ const DepositManagement = () => {
                 setStatusFilter('SETTLED');
                 setPage(0);
               }}
-              className={`px-4 py-2 rounded-lg transition ${
-                statusFilter === 'SETTLED'
-                  ? 'bg-gray-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-4 py-2 rounded-lg transition ${statusFilter === 'SETTLED'
+                ? 'bg-gray-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               Settled
             </button>
@@ -138,6 +135,12 @@ const DepositManagement = () => {
                   Deposit Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Duration
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Monthly Interest
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest Earned'}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -145,6 +148,9 @@ const DepositManagement = () => {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Notes
                 </th>
                 {statusFilter === 'ACTIVE' && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -172,6 +178,12 @@ const DepositManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(deposit.depositDate)}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      {deposit.durationDays ? `${deposit.durationDays} days (${deposit.durationMonths} months)` : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
+                      {deposit.interestRate}% per month
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                       {formatCurrency(deposit.currentInterest || deposit.interestEarned)}
                     </td>
@@ -179,15 +191,17 @@ const DepositManagement = () => {
                       {formatCurrency(deposit.currentTotal || deposit.totalAmount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        deposit.status === 'ACTIVE' 
-                          ? 'bg-green-100 text-green-800' 
-                          : deposit.status === 'RETURNED'
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${deposit.status === 'ACTIVE'
+                        ? 'bg-green-100 text-green-800'
+                        : deposit.status === 'RETURNED'
                           ? 'bg-blue-100 text-blue-800'
                           : 'bg-gray-100 text-gray-800'
-                      }`}>
+                        }`}>
                         {deposit.status}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {deposit.notes ? deposit.notes.substring(0, 50) + (deposit.notes.length > 50 ? '...' : '') : '-'}
                     </td>
                     {statusFilter === 'ACTIVE' && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

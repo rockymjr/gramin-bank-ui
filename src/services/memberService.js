@@ -31,5 +31,14 @@ export const memberService = {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
+  },
+
+  changePin: async (oldPin, newPin) => {
+    const token = localStorage.getItem('memberToken');
+    const response = await api.put('/member/change-pin',
+      { oldPin, newPin },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
   }
 };

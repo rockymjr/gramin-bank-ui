@@ -8,7 +8,9 @@ const LoanForm = ({ loan, onClose }) => {
   const [formData, setFormData] = useState({
     memberId: '',
     loanAmount: '',
-    loanDate: formatDateForInput(new Date())
+    loanDate: formatDateForInput(new Date()),
+    interestRate: '5',
+    notes: ''
   });
   const [loading, setLoading] = useState(false);
   const [loadingMembers, setLoadingMembers] = useState(true);
@@ -135,9 +137,8 @@ const LoanForm = ({ loan, onClose }) => {
                 name="memberId"
                 value={formData.memberId}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                  errors.memberId ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${errors.memberId ? 'border-red-500' : 'border-gray-300'
+                  }`}
               >
                 <option value="">-- Select Member --</option>
                 {members.map((member) => (
@@ -164,9 +165,8 @@ const LoanForm = ({ loan, onClose }) => {
               min="0.01"
               step="0.01"
               placeholder="Enter amount (no limits)"
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.loanAmount ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${errors.loanAmount ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors.loanAmount && (
               <p className="text-red-500 text-xs mt-1">{errors.loanAmount}</p>
@@ -186,13 +186,44 @@ const LoanForm = ({ loan, onClose }) => {
               value={formData.loanDate}
               onChange={handleChange}
               max={formatDateForInput(new Date())}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.loanDate ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${errors.loanDate ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors.loanDate && (
               <p className="text-red-500 text-xs mt-1">{errors.loanDate}</p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Interest Rate (% per month) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="interestRate"
+              value={formData.interestRate}
+              onChange={handleChange}
+              min="0.1"
+              max="100"
+              step="0.1"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">Default: 5% per month</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Notes <span className="text-gray-500 text-xs">(Admin Only)</span>
+            </label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              rows="3"
+              placeholder="Internal notes (not visible to members)"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            />
           </div>
 
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">

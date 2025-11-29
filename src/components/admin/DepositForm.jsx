@@ -8,7 +8,9 @@ const DepositForm = ({ deposit, onClose }) => {
   const [formData, setFormData] = useState({
     memberId: '',
     amount: '',
-    depositDate: formatDateForInput(new Date())
+    depositDate: formatDateForInput(new Date()),
+    interestRate: '2.5',
+    notes: ''
   });
   const [loading, setLoading] = useState(false);
   const [loadingMembers, setLoadingMembers] = useState(true);
@@ -132,9 +134,8 @@ const DepositForm = ({ deposit, onClose }) => {
                 name="memberId"
                 value={formData.memberId}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                  errors.memberId ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${errors.memberId ? 'border-red-500' : 'border-gray-300'
+                  }`}
               >
                 <option value="">-- Select Member --</option>
                 {members.map((member) => (
@@ -161,9 +162,8 @@ const DepositForm = ({ deposit, onClose }) => {
               min="0.01"
               step="0.01"
               placeholder="Enter amount (no limits)"
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.amount ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${errors.amount ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors.amount && (
               <p className="text-red-500 text-xs mt-1">{errors.amount}</p>
@@ -181,13 +181,44 @@ const DepositForm = ({ deposit, onClose }) => {
               value={formData.depositDate}
               onChange={handleChange}
               max={formatDateForInput(new Date())}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.depositDate ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${errors.depositDate ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors.depositDate && (
               <p className="text-red-500 text-xs mt-1">{errors.depositDate}</p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Interest Rate (% per month) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="interestRate"
+              value={formData.interestRate}
+              onChange={handleChange}
+              min="0.1"
+              max="100"
+              step="0.1"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">Default: 2.5% per month</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Notes <span className="text-gray-500 text-xs">(Admin Only)</span>
+            </label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              rows="3"
+              placeholder="Internal notes (not visible to members)"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            />
           </div>
 
           {deposit && (
