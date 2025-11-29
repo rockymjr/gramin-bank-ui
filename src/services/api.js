@@ -12,10 +12,18 @@ const api = axios.create({
 // Request interceptor to add JWT token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    // Check for admin token first
+    let token = localStorage.getItem('authToken');
+    
+    // If no admin token, check for member/operator token
+    if (!token) {
+      token = localStorage.getItem('memberToken');
+    }
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
     return config;
   },
   (error) => Promise.reject(error)
@@ -26,8 +34,20 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      // Clear both tokens on 401
       localStorage.removeItem('authToken');
-      window.location.href = '/admin/login';
+      localStorage.removeItem('memberToken');
+      localStorage.removeItem('memberId');
+      localStorage.removeItem('memberName');
+      localStorage.removeItem('isOperator');
+      
+      // Redirect based on which token was being used
+      const wasOperator = localStorage.getItem('isOperator') === 'true';
+      if (wasOperator) {
+        window.location.href = '/login';
+      } else {
+        window.location.href = '/admin/login';
+      }
     }
     return Promise.reject(error);
   }

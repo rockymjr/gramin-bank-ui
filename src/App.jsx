@@ -110,17 +110,17 @@ function AppRoutes() {
       <Route
         path="/admin/loans"
         element={
-          <ProtectedRoute>
-            <LoanManagement readOnly={!!isOperator} />
-          </ProtectedRoute>
+          isOperator
+            ? <LoanManagement readOnly={true} />
+            : <ProtectedRoute><LoanManagement readOnly={false} /></ProtectedRoute>
         }
       />
       <Route
         path="/admin/statements"
         element={
-          <ProtectedRoute>
-            <MemberStatement readOnly={!!isOperator} />
-          </ProtectedRoute>
+          isOperator
+            ? <MemberStatement readOnly={true} />
+            : <ProtectedRoute><MemberStatement readOnly={false} /></ProtectedRoute>
         }
       />
       <Route

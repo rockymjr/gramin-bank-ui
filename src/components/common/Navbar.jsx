@@ -35,11 +35,11 @@ const Navbar = () => {
     { title: 'Reports', icon: Calendar, link: '/admin/reports' }
   ];
 
-  // Operator menu items (read-only, public pages)
+  // Operator menu items (read-only, admin pages)
   const operatorMenuItems = [
     { title: 'Deposits', icon: TrendingUp, link: '/admin/deposits' },
-    { title: 'Loans', icon: TrendingDown, link: '/loans' },
-    { title: 'Statements', icon: FileText, link: '/statements' } // If you have a public statements page, otherwise remove or adjust
+    { title: 'Loans', icon: TrendingDown, link: '/admin/loans' },
+    { title: 'Statements', icon: FileText, link: '/admin/statements' }
   ];
 
   // Determine what to show in navbar
