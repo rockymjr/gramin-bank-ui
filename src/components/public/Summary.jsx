@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { publicService } from '../../services/publicService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import Loader from '../common/Loader';
-import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 const Summary = () => {
   const [summary, setSummary] = useState(null);
@@ -38,7 +38,7 @@ const Summary = () => {
         <p className="text-sm sm:text-base text-gray-600">Financial Year: {summary?.financialYear}</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Total Deposits Card */}
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-4 sm:p-6 text-white">
           <div className="flex items-center justify-between mb-3 sm:mb-4">
@@ -68,13 +68,30 @@ const Summary = () => {
         </div>
 
         {/* Available Balance Card */}
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-4 sm:p-6 text-white sm:col-span-2 lg:col-span-1">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-4 sm:p-6 text-white">
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <Wallet size={28} className="sm:w-8 sm:h-8" />
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Available Balance</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">Available Cash</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.availableBalance)}
+          </p>
+          <p className="text-xs mt-1 opacity-80">
+            Cash on hand
+          </p>
+        </div>
+
+        {/* Bank Profit Card */}
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-4 sm:p-6 text-white">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <DollarSign size={28} className="sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">Bank Profit</h3>
+          <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
+            {formatCurrency(summary?.bankProfit)}
+          </p>
+          <p className="text-xs mt-1 opacity-80">
+            2.5% spread earned
           </p>
         </div>
       </div>

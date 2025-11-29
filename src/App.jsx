@@ -14,7 +14,6 @@ import DepositList from './components/public/DepositList';
 import LoanList from './components/public/LoanList';
 
 // Admin Pages
-import Login from './components/admin/Login';
 import MemberManagement from './components/admin/MemberManagement';
 import DepositManagement from './components/admin/DepositManagement';
 import LoanManagement from './components/admin/LoanManagement';
@@ -23,7 +22,6 @@ import MemberStatement from './components/admin/MemberStatement';
 import YearlyReport from './components/admin/YearlyReport';
 
 // Member Pages
-import MemberLogin from './components/member/MemberLogin';
 import MemberDashboard from './components/member/MemberDashboard';
 
 // Home Page Component
@@ -88,7 +86,6 @@ function AppRoutes() {
       <Route path="/login" element={<UnifiedLogin />} />
 
       {/* Admin Routes */}
-      <Route path="/admin/login" element={<Login />} />
       {/* Removed /admin/dashboard - redirect to members */}
       <Route path="/admin/dashboard" element={<Navigate to="/admin/members" replace />} />
       <Route
@@ -133,7 +130,6 @@ function AppRoutes() {
       />
 
       {/* Member Routes */}
-      <Route path="/member/login" element={<MemberLogin />} />
       <Route
         path="/member/dashboard"
         element={

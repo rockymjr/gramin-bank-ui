@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMemberAuth } from '../../context/MemberAuthContext';
-import { Home, User, LogOut, Menu, X, Users as UsersIcon, TrendingUp, TrendingDown, FileText, Calendar, Lock } from 'lucide-react';
+import { Home, User, LogOut, Menu, X, Users as UsersIcon, TrendingUp, TrendingDown, FileText, Calendar } from 'lucide-react';
 
 const Navbar = () => {
   const { isAuthenticated: isAdmin, username: adminUsername, logout: adminLogout } = useAuth();
   const { isAuthenticated: isMember, memberName, isOperator, logout: memberLogout } = useMemberAuth();
-  const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleAdminLogout = () => {
     adminLogout();
     setMobileMenuOpen(false);
-    navigate('/');
   };
 
   const handleMemberLogout = () => {
     memberLogout();
     setMobileMenuOpen(false);
-    navigate('/');
   };
-
-  const isMemberRoute = location.pathname.startsWith('/member');
-  const isAdminRoute = location.pathname.startsWith('/admin');
 
   // Admin menu items
   const adminMenuItems = [
@@ -47,15 +41,6 @@ const Navbar = () => {
   const showAdminMenu = isAdmin;
   const showMemberMenu = isMember && !isOperator;
   const showOperatorMenu = isMember && isOperator;
-  
-  // Debug: Log the authentication state
-  React.useEffect(() => {
-    console.log('Navbar updated - isAdmin:', isAdmin, 'isMember:', isMember, 'isOperator:', isOperator);
-    console.log('localStorage.authToken:', localStorage.getItem('authToken'));
-    console.log('localStorage.memberToken:', localStorage.getItem('memberToken'));
-    console.log('localStorage.isOperator:', localStorage.getItem('isOperator'));
-    console.log('showLoginButtons:', showLoginButtons, 'showOperatorMenu:', showOperatorMenu);
-  }, [isAdmin, isMember, isOperator, location.pathname]);
 
   return (
     <nav className="bg-green-600 text-white shadow-lg sticky top-0 z-50">
