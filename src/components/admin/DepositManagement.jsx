@@ -182,7 +182,7 @@ const DepositManagement = () => {
                       {deposit.durationDays ? `${deposit.durationDays} days (${deposit.durationMonths} months)` : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                      {deposit.interestRate}% per month
+                      {deposit.interestRate}%
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                       {formatCurrency(deposit.currentInterest || deposit.interestEarned)}

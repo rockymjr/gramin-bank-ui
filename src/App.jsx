@@ -46,14 +46,6 @@ const HomePage = () => {
             <h3 className="text-xl font-bold text-gray-800 mb-2">View Loans</h3>
             <p className="text-gray-600">See all loans with masked member names</p>
           </Link>
-
-          <Link
-            to="/member/login"
-            className="block bg-white rounded-lg shadow-lg hover:shadow-xl transition p-6 border-t-4 border-blue-500"
-          >
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Member Login</h3>
-            <p className="text-gray-600">Access your account with phone & PIN</p>
-          </Link>
         </div>
       </div>
     </div>
