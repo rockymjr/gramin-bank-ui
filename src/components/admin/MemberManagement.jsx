@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { adminService } from '../../services/adminService';
 import { Search, UserPlus, Edit, Trash2 } from 'lucide-react';
 import Loader from '../common/Loader';
@@ -144,9 +145,14 @@ const MemberManagement = () => {
                 </tr>
               ) : (
                 members.map((member) => (
-                  <tr key={member.id} className="hover:bg-gray-50">
+                  <tr key={member.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {member.firstName} {member.lastName}
+                      <Link
+                        to={`/admin/statements?memberId=${member.id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {member.firstName} {member.lastName}
+                      </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {member.phone}

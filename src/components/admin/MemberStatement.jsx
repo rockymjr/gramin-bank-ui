@@ -2,58 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/adminService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
-import { Search, FileText, Download } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import Loader from '../common/Loader';
 
 const MemberStatement = ({ readOnly }) => {
-  const [members, setMembers] = useState([]);
-  const [selectedMemberId, setSelectedMemberId] = useState('');
-  const [year, setYear] = useState(null);
   const [statement, setStatement] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [loadingMembers, setLoadingMembers] = useState(true);
 
+  // Read optional memberId from query params and fetch members
   useEffect(() => {
-    fetchMembers();
+    const params = new URLSearchParams(window.location.search);
+    const memberIdFromQuery = params.get('memberId');
+    if (memberIdFromQuery) {
+      // fetch statement for all years (year=null)
+      (async () => {
+        try {
+          setLoading(true);
+          const data = await adminService.getMemberStatement(memberIdFromQuery, null);
+          setStatement(data);
+        } catch (error) {
+          console.error('Error fetching statement:', error);
+          alert('Failed to fetch statement');
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
   }, []);
-
-  const fetchMembers = async () => {
-    try {
-      setLoadingMembers(true);
-      const data = await adminService.getAllMembers();
-      setMembers(data);
-    } catch (error) {
-      console.error('Error fetching members:', error);
-      alert('Failed to load members');
-    } finally {
-      setLoadingMembers(false);
-    }
-  };
-
-  const handleFetchStatement = async (e) => {
-    e.preventDefault();
-
-    if (!selectedMemberId) {
-      alert('Please select a member');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const data = await adminService.getMemberStatement(selectedMemberId, year);
-      setStatement(data);
-    } catch (error) {
-      console.error('Error fetching statement:', error);
-      alert('Failed to fetch statement');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -64,59 +39,7 @@ const MemberStatement = ({ readOnly }) => {
         </div>
       </div>
 
-      {/* Search Form */}
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <form onSubmit={handleFetchStatement} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Select Member <span className="text-red-500">*</span>
-              </label>
-              {loadingMembers ? (
-                <p className="text-sm text-gray-500">Loading members...</p>
-              ) : (
-                <select
-                  value={selectedMemberId}
-                  onChange={(e) => setSelectedMemberId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  required
-                >
-                  <option value="">-- Select Member --</option>
-                  {members.map((member) => (
-                    <option key={member.id} value={member.id}>
-                      {member.firstName} {member.lastName} - {member.phone}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Year
-              </label>
-              <select
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                {["2025-26", "2024-25"].map((y) => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading || loadingMembers}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition disabled:opacity-50"
-          >
-            <Search size={20} />
-            <span>{loading ? 'Loading...' : 'Fetch Statement'}</span>
-          </button>
-        </form>
-      </div>
+      {loading && <Loader message="Loading statement..." />}
 
       {/* Statement Display */}
       {statement && (
@@ -126,15 +49,7 @@ const MemberStatement = ({ readOnly }) => {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-2xl font-bold text-gray-800">Member Statement</h3>
-                <p className="text-gray-600 mt-1">Financial Year: {year}</p>
               </div>
-              <button
-                onClick={handlePrint}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition print:hidden"
-              >
-                <Download size={20} />
-                <span>Print</span>
-              </button>
             </div>
 
             <div className="bg-gray-50 rounded-lg p-4 print:bg-white print:border">
@@ -160,8 +75,11 @@ const MemberStatement = ({ readOnly }) => {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Deposit Date</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Return Date</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Duration</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Monthly Interest</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Interest Earned</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -171,7 +89,10 @@ const MemberStatement = ({ readOnly }) => {
                     {statement.deposits.map((deposit) => (
                       <tr key={deposit.id}>
                         <td className="px-4 py-2 text-sm">{formatDate(deposit.depositDate)}</td>
+                        <td className="px-4 py-2 text-sm">{deposit.returnDate ? formatDate(deposit.returnDate) : '-'}</td>
+                        <td className="px-4 py-2 text-sm">{deposit.durationMonths ? `${deposit.durationMonths}m ${deposit.durationDays}d` : '-'}</td>
                         <td className="px-4 py-2 text-sm">{formatCurrency(deposit.amount)}</td>
+                        <td className="px-4 py-2 text-sm text-green-600">{formatCurrency((deposit.amount * deposit.interestRate) / 100 || 0)}</td>
                         <td className="px-4 py-2 text-sm text-green-600">{formatCurrency(deposit.interestEarned)}</td>
                         <td className="px-4 py-2 text-sm font-medium">{formatCurrency(deposit.totalAmount)}</td>
                         <td className="px-4 py-2 text-sm">
@@ -202,9 +123,11 @@ const MemberStatement = ({ readOnly }) => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Loan Date</th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Return Date</th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Interest</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Duration</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Monthly Interest</th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total Interest</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total Repayment</th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     </tr>
@@ -213,8 +136,10 @@ const MemberStatement = ({ readOnly }) => {
                     {statement.loans.map((loan) => (
                       <tr key={loan.id}>
                         <td className="px-4 py-2 text-sm">{formatDate(loan.loanDate)}</td>
-                        <td className="px-4 py-2 text-sm">{formatCurrency(loan.loanAmount)}</td>
                         <td className="px-4 py-2 text-sm">{loan.returnDate ? formatDate(loan.returnDate) : '-'}</td>
+                        <td className="px-4 py-2 text-sm">{loan.durationMonths ? `${loan.durationMonths}m ${loan.durationDays}d` : '-'}</td>
+                        <td className="px-4 py-2 text-sm">{formatCurrency(loan.loanAmount)}</td>
+                        <td className="px-4 py-2 text-sm text-red-600">{formatCurrency((loan.loanAmount * loan.interestRate) / 100 || 0)}</td>
                         <td className="px-4 py-2 text-sm text-red-600">{formatCurrency(loan.interestAmount)}</td>
                         <td className="px-4 py-2 text-sm font-medium">{formatCurrency(loan.totalRepayment)}</td>
                         <td className="px-4 py-2 text-sm">
@@ -241,7 +166,7 @@ const MemberStatement = ({ readOnly }) => {
           {/* Summary */}
           <div className="bg-blue-50 rounded-lg p-4 border-t-4 border-blue-500 print:border print:border-black">
             <h4 className="font-semibold text-gray-800 mb-3">Summary</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-600">Total Deposits</p>
                 <p className="text-xl font-bold text-green-600">{formatCurrency(statement.totalDeposits)}</p>
@@ -249,14 +174,6 @@ const MemberStatement = ({ readOnly }) => {
               <div>
                 <p className="text-sm text-gray-600">Total Loans</p>
                 <p className="text-xl font-bold text-red-600">{formatCurrency(statement.totalLoans)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Net Position</p>
-                <p className={`text-xl font-bold ${
-                  statement.netPosition >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {formatCurrency(statement.netPosition)}
-                </p>
               </div>
             </div>
           </div>

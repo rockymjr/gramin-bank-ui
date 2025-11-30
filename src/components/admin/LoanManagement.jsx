@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { adminService } from '../../services/adminService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
@@ -20,6 +21,7 @@ const LoanManagement = ({ readOnly }) => {
   const [paymentLoan, setPaymentLoan] = useState(null);
   const [historyLoan, setHistoryLoan] = useState(null);
   const [statusFilter, setStatusFilter] = useState('ACTIVE');
+  const [sortedLoans, setSortedLoans] = useState([]);
 
   useEffect(() => {
     fetchLoans();
@@ -29,7 +31,12 @@ const LoanManagement = ({ readOnly }) => {
     try {
       setLoading(true);
       const data = await adminService.getAllLoans(statusFilter, page, 10);
-      setLoans(data.content);
+      // Sort by loan date in descending order (newest first)
+      const sorted = [...data.content].sort((a, b) => {
+        return new Date(b.loanDate) - new Date(a.loanDate);
+      });
+      setSortedLoans(sorted);
+      setLoans(sorted);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching loans:', error);
@@ -93,6 +100,19 @@ const LoanManagement = ({ readOnly }) => {
         <div className="flex items-center space-x-4">
           <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
           <div className="flex space-x-2">
+            <button
+              onClick={() => {
+                setStatusFilter('ALL');
+                setPage(0);
+              }}
+              className={`px-4 py-2 rounded-lg transition ${
+                statusFilter === 'ALL'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              All Loans
+            </button>
             <button
               onClick={() => {
                 setStatusFilter('ACTIVE');
@@ -161,7 +181,7 @@ const LoanManagement = ({ readOnly }) => {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
             </th>
-                {!readOnly && (
+                {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -177,9 +197,14 @@ const LoanManagement = ({ readOnly }) => {
             </tr>
           ) : (
             loans.map((loan) => (
-              <tr key={loan.id} className="hover:bg-gray-50">
+              <tr key={loan.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {loan.memberName}
+                  <Link
+                    to={`/admin/statements?memberId=${loan.memberId}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {loan.memberName}
+                  </Link>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {formatCurrency(loan.loanAmount)}
@@ -232,10 +257,10 @@ const LoanManagement = ({ readOnly }) => {
                     { loan.status}
                   </span>
                 </td>
-                {!readOnly && (
+                {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
-                      {statusFilter === 'ACTIVE' && (
+                      {(loan.status === 'ACTIVE' || statusFilter === 'ALL') && (
                         <>
                           <button
                             onClick={() => handleEdit(loan)}
@@ -281,7 +306,7 @@ const LoanManagement = ({ readOnly }) => {
 
     {/* Pagination */}
     <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
-      <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+      <div className="flex-1 flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-700">
             Page <span className="font-medium">{page + 1}</span> of{' '}

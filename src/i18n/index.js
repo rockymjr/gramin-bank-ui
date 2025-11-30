@@ -2,7 +2,7 @@
 const translations = {
   en: {
     // App
-    appName: 'Dhuripara Gramin Bank',
+    appName: 'Dhuripara Bank',
     
     // Navigation
     home: 'Home',

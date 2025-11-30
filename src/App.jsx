@@ -29,25 +29,7 @@ const HomePage = () => {
   return (
     <div>
       <Summary />
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link
-            to="/deposits"
-            className="block bg-white rounded-lg shadow-lg hover:shadow-xl transition p-6 border-t-4 border-green-500"
-          >
-            <h3 className="text-xl font-bold text-gray-800 mb-2">View Deposits</h3>
-            <p className="text-gray-600">See all deposits with masked member names</p>
-          </Link>
-
-          <Link
-            to="/loans"
-            className="block bg-white rounded-lg shadow-lg hover:shadow-xl transition p-6 border-t-4 border-red-500"
-          >
-            <h3 className="text-xl font-bold text-gray-800 mb-2">View Loans</h3>
-            <p className="text-gray-600">See all loans with masked member names</p>
-          </Link>
-        </div>
-      </div>
+      {/* Quick access available in Navbar for admins/operators - removed duplicate home buttons */}
     </div>
   );
 };

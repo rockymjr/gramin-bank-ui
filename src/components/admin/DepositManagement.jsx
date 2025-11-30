@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { adminService } from '../../services/adminService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
@@ -16,6 +17,7 @@ const DepositManagement = ({ readOnly }) => {
   const [editingDeposit, setEditingDeposit] = useState(null);
   const [returningDeposit, setReturningDeposit] = useState(null);
   const [statusFilter, setStatusFilter] = useState('ACTIVE');
+  const [sortedDeposits, setSortedDeposits] = useState([]);
 
   useEffect(() => {
     fetchDeposits();
@@ -25,7 +27,14 @@ const DepositManagement = ({ readOnly }) => {
     try {
       setLoading(true);
       const data = await adminService.getAllDeposits(statusFilter, page, 10);
-      setDeposits(data.content);
+      // Sort by deposit date in descending order (newest first)
+      const sorted = [...data.content].sort((a, b) => {
+        const dateA = new Date(b.depositDate);
+        const dateB = new Date(a.depositDate);
+        return dateA.getTime() - dateB.getTime();
+      });
+      setSortedDeposits(sorted);
+      setDeposits(sorted);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching deposits:', error);
@@ -82,6 +91,18 @@ const DepositManagement = ({ readOnly }) => {
         <div className="flex items-center space-x-4">
           <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
           <div className="flex space-x-2">
+            <button
+              onClick={() => {
+                setStatusFilter('ALL');
+                setPage(0);
+              }}
+              className={`px-4 py-2 rounded-lg transition ${statusFilter === 'ALL'
+                ? 'bg-purple-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+            >
+              All Deposits
+            </button>
             <button
               onClick={() => {
                 setStatusFilter('ACTIVE');
@@ -148,7 +169,7 @@ const DepositManagement = ({ readOnly }) => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Notes
                 </th>
-                {statusFilter === 'ACTIVE' && !readOnly && (
+                {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -164,9 +185,14 @@ const DepositManagement = ({ readOnly }) => {
                 </tr>
               ) : (
                 deposits.map((deposit) => (
-                  <tr key={deposit.id} className="hover:bg-gray-50">
+                  <tr key={deposit.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {deposit.memberName}
+                      <Link
+                        to={`/admin/statements?memberId=${deposit.memberId}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {deposit.memberName}
+                      </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {formatCurrency(deposit.amount)}
@@ -205,23 +231,27 @@ const DepositManagement = ({ readOnly }) => {
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {deposit.notes ? deposit.notes.substring(0, 50) + (deposit.notes.length > 50 ? '...' : '') : '-'}
                     </td>
-                    {statusFilter === 'ACTIVE' && !readOnly && (
+                    {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleEdit(deposit)}
-                            className="text-blue-600 hover:text-blue-900"
-                            title="Edit"
-                          >
-                            <Edit size={18} />
-                          </button>
-                          <button
-                            onClick={() => setReturningDeposit(deposit)}
-                            className="text-green-600 hover:text-green-900"
-                            title="Return"
-                          >
-                            <RotateCcw size={18} />
-                          </button>
+                          {(deposit.status === 'ACTIVE' || statusFilter === 'ALL') && (
+                            <>
+                              <button
+                                onClick={() => handleEdit(deposit)}
+                                className="text-blue-600 hover:text-blue-900"
+                                title="Edit"
+                              >
+                                <Edit size={18} />
+                              </button>
+                              <button
+                                onClick={() => setReturningDeposit(deposit)}
+                                className="text-green-600 hover:text-green-900"
+                                title="Return"
+                              >
+                                <RotateCcw size={18} />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </td>
                     )}
@@ -234,7 +264,7 @@ const DepositManagement = ({ readOnly }) => {
 
         {/* Pagination */}
         <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
-          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div className="flex-1 flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-700">
                 Page <span className="font-medium">{page + 1}</span> of{' '}
