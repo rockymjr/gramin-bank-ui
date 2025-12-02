@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { publicService } from '../../services/publicService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
+import { useLanguage } from '../../context/LanguageContext';
 import Loader from '../common/Loader';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const DepositList = () => {
+  const { t } = useLanguage();
   const [deposits, setDeposits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -28,11 +30,11 @@ const DepositList = () => {
     }
   };
 
-  if (loading) return <Loader message="Loading deposits..." />;
+  if (loading) return <Loader message={t('loading')} />;
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">All Deposits</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">{t('deposits')}</h2>
 
       {/* Mobile Card View */}
       <div className="block sm:hidden space-y-4">
@@ -55,7 +57,7 @@ const DepositList = () => {
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Amount:</span>
+                <span className="text-gray-600">{t('amount')}:</span>
                 <span className="font-semibold">{formatCurrency(deposit.amount)}</span>
               </div>
             </div>
@@ -70,16 +72,16 @@ const DepositList = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Member Name
+                  {t('memberName')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
+                  {t('amount')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Deposit Date
+                  {t('depositDate')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  {t('status')}
                 </th>
               </tr>
             </thead>
@@ -87,7 +89,7 @@ const DepositList = () => {
               {deposits.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
-                    No deposits found
+                    {t('notFound')}
                   </td>
                 </tr>
               ) : (

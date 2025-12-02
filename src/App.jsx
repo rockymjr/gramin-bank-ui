@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { MemberAuthProvider } from './context/MemberAuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -37,19 +38,21 @@ const HomePage = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <MemberAuthProvider>
-        <Router>
-          <div className="flex flex-col min-h-screen bg-gray-50">
-            <Navbar />
-            <main className="flex-grow">
-              <AppRoutes />
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </MemberAuthProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <MemberAuthProvider>
+          <Router>
+            <div className="flex flex-col min-h-screen bg-gray-50">
+              <Navbar />
+              <main className="flex-grow">
+                <AppRoutes />
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </MemberAuthProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 

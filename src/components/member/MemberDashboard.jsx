@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { memberService } from '../../services/memberService';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
+import { useLanguage } from '../../context/LanguageContext';
 import Loader from '../common/Loader';
 import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 const MemberDashboard = () => {
+  const { t } = useLanguage();
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,8 +28,8 @@ const MemberDashboard = () => {
     }
   };
 
-  if (loading) return <Loader message="Loading your account..." />;
-  if (!dashboard) return <div className="text-center py-8">No data available</div>;
+  if (loading) return <Loader message={t('loading')} />;
+  if (!dashboard) return <div className="text-center py-8">{t('notFound')}</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -47,7 +49,7 @@ const MemberDashboard = () => {
             <TrendingUp size={28} />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">All Time</span>
           </div>
-          <h3 className="text-sm font-medium opacity-90">Total Deposited</h3>
+          <h3 className="text-sm font-medium opacity-90">{t('yourTotalDeposits')}</h3>
           <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.totalDeposited)}</p>
           <p className="text-xs mt-1 opacity-80">
             Interest Earned: {formatCurrency(dashboard.totalDepositInterestEarned)}
@@ -61,7 +63,7 @@ const MemberDashboard = () => {
             <TrendingDown size={28} />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">All Time</span>
           </div>
-          <h3 className="text-sm font-medium opacity-90">Total Borrowed</h3>
+          <h3 className="text-sm font-medium opacity-90">{t('yourTotalLoans')}</h3>
           <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.totalBorrowed)}</p>
           <p className="text-xs mt-1 opacity-80">
             Interest Paid: {formatCurrency(dashboard.totalLoanInterestPaid)}
@@ -74,7 +76,7 @@ const MemberDashboard = () => {
             <DollarSign size={28} />
             <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">Active</span>
           </div>
-          <h3 className="text-sm font-medium opacity-90">Current Loans</h3>
+          <h3 className="text-sm font-medium opacity-90">{t('yourCurrentLoan')}</h3>
           <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.currentLoans)}</p>
           <p className="text-xs mt-1 opacity-80">
             Current Interest: {formatCurrency(dashboard.currentLoanInterest)}
@@ -84,35 +86,35 @@ const MemberDashboard = () => {
 
       {/* Deposits Table */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Deposits</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('deposits')}</h2>
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Deposit Date
+                    {t('depositDate')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Amount
+                    {t('amount')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Return Date
+                    {t('returnDeposit')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Duration
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Monthly Interest
+                    {t('interestRate')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Total Interest
+                    {t('interestEarned')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Total Amount
+                    {t('totalAmount')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Status
+                    {t('status')}
                   </th>
                 </tr>
               </thead>
@@ -168,38 +170,38 @@ const MemberDashboard = () => {
 
       {/* Loans Table */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Loans</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('loans')}</h2>
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Loan Date
+                    {t('loanDate')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Amount
+                    {t('loanAmount')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Return Date
+                    {t('returnDeposit')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Duration
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Monthly Interest
+                    {t('interestRate')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Total Interest
+                    {t('interestPaid')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Paid
+                    {t('paidAmount')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Due
+                    {t('remainingAmount')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Status
+                    {t('status')}
                   </th>
                 </tr>
               </thead>

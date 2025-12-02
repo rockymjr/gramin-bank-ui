@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { publicService } from '../../services/publicService';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { useLanguage } from '../../context/LanguageContext';
 import Loader from '../common/Loader';
 import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 const Summary = () => {
+  const { t } = useLanguage();
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,14 +28,14 @@ const Summary = () => {
     }
   };
 
-  if (loading) return <Loader message="Loading summary..." />;
+  if (loading) return <Loader message={t('loading')} />;
   if (error) return <div className="text-red-500 text-center py-8 px-4">{error}</div>;
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
 
       <div className="mb-4">
-        <h1 className="text-lg sm:text-2xl font-bold text-gray-800">Dhuripara Gramin Bank Fund Summary</h1>
+        <h1 className="text-lg sm:text-2xl font-bold text-gray-800">{t('appName')} {t('summary')}</h1>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -45,7 +47,7 @@ const Summary = () => {
               {summary?.activeDepositsCount} Active
             </span>
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Total Deposits</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('totalDeposits')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.totalDeposits)}
           </p>
@@ -59,7 +61,7 @@ const Summary = () => {
               {summary?.activeLoansCount} Active
             </span>
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Total Loans</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('totalLoans')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.totalLoans)}
           </p>
@@ -70,7 +72,7 @@ const Summary = () => {
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <Wallet size={28} className="sm:w-8 sm:h-8" />
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Available Cash</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('availableBalance')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {(() => {
               const avail = summary?.availableBalance != null
@@ -91,7 +93,7 @@ const Summary = () => {
           <div className="flex items-center justify-between mb-3 sm:mb-4">
             <DollarSign size={28} className="sm:w-8 sm:h-8" />
           </div>
-          <h3 className="text-sm sm:text-lg font-medium opacity-90">Bank Profit</h3>
+          <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('bankProfit')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.bankProfit)}
           </p>

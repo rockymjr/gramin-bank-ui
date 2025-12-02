@@ -3,6 +3,7 @@ const translations = {
   en: {
     // App
     appName: 'Dhuripara Bank',
+    summary: 'Fund Summary',
     
     // Navigation
     home: 'Home',
@@ -33,6 +34,11 @@ const translations = {
     activeDeposits: 'Active Deposits',
     activeLoans: 'Active Loans',
     financialYear: 'Financial Year',
+    bankProfit: 'Bank Profit',
+
+    yourTotalDeposits: 'Your Total Deposits',
+    yourTotalLoans: 'Your Total Loans',
+    yourCurrentLoan: 'Your Current Loan',
     
     // Members
     members: 'Members',
@@ -99,6 +105,7 @@ const translations = {
   hi: {
     // App
     appName: 'धुरीपाड़ा ग्रामीण बैंक',
+    summary: 'धन सारांश',
     
     // Navigation
     home: 'होम',
@@ -129,6 +136,11 @@ const translations = {
     activeDeposits: 'सक्रिय जमा',
     activeLoans: 'सक्रिय ऋण',
     financialYear: 'वित्तीय वर्ष',
+    bankProfit: 'बैंक लाभ',
+    yourTotalDeposits: 'आपकी कुल जमा',
+    yourTotalLoans: 'आपकी कुल ऋण',
+    yourCurrentLoan: 'आपकी वर्तमान ऋण',
+
     
     // Members
     members: 'सदस्य',
@@ -171,7 +183,7 @@ const translations = {
     inactive: 'निष्क्रिय',
     
     // Login
-    loginTitle: 'लॉग इन',
+    loginTitle: 'Login',
     username: 'उपयोगकर्ता नाम',
     password: 'पासवर्ड',
     memberLoginTitle: 'सदस्य लॉगिन',
@@ -194,7 +206,8 @@ const translations = {
   
   bn: {
     // App
-    appName: 'ঢুড়িপাড়া গ্রামীণ ব্যাংক',
+    appName: 'ঢুড়িপাড়া গ্রামীণ ব্যাংক',
+    summary: ' ',
     
     // Navigation
     home: 'হোম',
@@ -224,7 +237,11 @@ const translations = {
     availableBalance: 'বর্তমান ব্যালেন্স',
     activeDeposits: 'বর্তমান জমা',
     activeLoans: 'বর্তমান ঋণ',
+    bankProfit: 'লাভ',
     financialYear: 'বছর',
+    yourTotalDeposits: 'আপনার মোট জমা',  
+    yourTotalLoans: 'আপনার মোট ঋণ',
+    yourCurrentLoan: 'আপনার বর্তমান ঋণ',
     
     // Members
     members: 'সদস্য',
@@ -267,7 +284,7 @@ const translations = {
     inactive: 'নিষ্ক্রিয়',
     
     // Login
-    loginTitle: 'লগইন',
+    loginTitle: 'Login',
     username: 'Username',
     password: 'Password',
     memberLoginTitle: 'Member Login',

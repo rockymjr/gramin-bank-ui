@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { adminService } from '../../services/adminService';
+import { useLanguage } from '../../context/LanguageContext';
 import { Search, UserPlus, Edit, Trash2 } from 'lucide-react';
 import Loader from '../common/Loader';
 import MemberForm from './MemberForm';
@@ -8,6 +9,7 @@ import { formatDate } from '../../utils/dateFormatter';
 import { useMemberAuth } from '../../context/MemberAuthContext';
 
 const MemberManagement = () => {
+  const { t } = useLanguage();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -68,19 +70,19 @@ const MemberManagement = () => {
     }
   };
 
-  if (loading) return <Loader message="Loading members..." />;
+  if (loading) return <Loader message={t('loading')} />;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Member Management</h2>
+        <h2 className="text-2xl font-bold text-gray-800">{t('members')}</h2>
         {!isOperator && (
           <button
             onClick={handleAddNew}
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
           >
             <UserPlus size={20} />
-            <span>Add Member</span>
+            <span>{t('addMember')}</span>
           </button>
         )}
       </div>
@@ -93,7 +95,7 @@ const MemberManagement = () => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by name or phone..."
+              placeholder={`${t('search')} ${t('memberName')} or phone...`}
               className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -102,7 +104,7 @@ const MemberManagement = () => {
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
           >
-            Search
+            {t('search')}
           </button>
           <button
             type="button"
@@ -112,7 +114,7 @@ const MemberManagement = () => {
             }}
             className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition"
           >
-            Clear
+            {t('cancel')}
           </button>
         </div>
       </form>
@@ -124,21 +126,21 @@ const MemberManagement = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
+                  {t('memberName')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Phone
+                  {t('phone')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  PIN
+                  {t('pin')}
                 </th>
                 {!isOperator &&
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                    {t('status')}
                   </th>}
                 {!isOperator &&
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    {t('actions')}
                   </th>
                 }
               </tr>

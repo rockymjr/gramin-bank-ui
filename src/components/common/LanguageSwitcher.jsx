@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { Globe } from 'lucide-react';
 
 const LanguageSwitcher = () => {
   const { language, changeLanguage } = useLanguage();
@@ -13,20 +12,17 @@ const LanguageSwitcher = () => {
 
   return (
     <div className="relative inline-block">
-      <div className="flex items-center space-x-2">
-        <Globe size={20} className="text-white" />
-        <select
-          value={language}
-          onChange={(e) => changeLanguage(e.target.value)}
-          className="bg-green-700 text-white px-3 py-1 rounded border-none focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer"
-        >
-          {languages.map((lang) => (
-            <option key={lang.code} value={lang.code}>
-              {lang.native}
-            </option>
-          ))}
-        </select>
-      </div>
+      <select
+        value={language}
+        onChange={(e) => changeLanguage(e.target.value)}
+        className="bg-white text-gray-800 px-2 py-1 rounded text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer hover:border-gray-400 transition"
+      >
+        {languages.map((lang) => (
+          <option key={lang.code} value={lang.code}>
+            {lang.native}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };

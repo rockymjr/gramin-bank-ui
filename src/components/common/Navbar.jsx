@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMemberAuth } from '../../context/MemberAuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 import { Home, User, LogOut, Users as UsersIcon, TrendingUp, TrendingDown } from 'lucide-react';
 
 const Navbar = () => {
   const { isAuthenticated: isAdmin, username: adminUsername, logout: adminLogout } = useAuth();
   const { isAuthenticated: isMember, memberName, isOperator, logout: memberLogout } = useMemberAuth();
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleAdminLogout = () => {
@@ -35,8 +38,9 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Mobile: show username or login button at top-right */}
+          {/* Mobile: show language switcher and username or login button at top-right */}
           <div className="md:hidden flex items-center space-x-2">
+            <LanguageSwitcher />
             {(isAdmin || isMember) ? (
               <div className="text-sm md:text-base font-bold">{isAdmin ? `Admin: ${adminUsername}` : memberName}</div>
             ) : (
@@ -46,7 +50,8 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
+            <LanguageSwitcher />
             {(isAdmin || isMember) && (
               <div className="text-green-200 text-sm mr-2">
                 {isAdmin ? `Admin: ${adminUsername}` : memberName}
@@ -56,7 +61,7 @@ const Navbar = () => {
             {showLoginButtons && (
               <Link to="/login" className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition text-white">
                 <User size={16} />
-                <span className="text-sm">Login</span>
+                <span className="text-sm">{t('loginTitle')}</span>
               </Link>
             )}
           </div>
