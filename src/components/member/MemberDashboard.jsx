@@ -52,7 +52,21 @@ const MemberDashboard = () => {
           <h3 className="text-sm font-medium opacity-90">{t('yourTotalDeposits')}</h3>
           <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.totalDeposited)}</p>
           <p className="text-xs mt-1 opacity-80">
-            Interest Earned: {formatCurrency(dashboard.totalDepositInterestEarned)}
+            {t('yourTotalInterestEarned')} : {formatCurrency(dashboard.totalDepositInterestEarned)}
+          </p>
+        </div>
+
+
+        {/* Current Deposited */}
+        <div className="bg-gradient-to-br from-green-700 to-green-800 rounded-lg shadow-lg p-6 text-white">
+          <div className="flex items-center justify-between mb-3">
+            <TrendingUp size={28} />
+            <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">Active</span>
+          </div>
+          <h3 className="text-sm font-medium opacity-90">{t('yourActiveDeposits')}</h3>
+          <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.currentDeposits)}</p>
+          <p className="text-xs mt-1 opacity-80">
+            {t('yourCurrentInterest')} : {formatCurrency(dashboard.currentDepositInterest)}
           </p>
         </div>
 
@@ -66,7 +80,7 @@ const MemberDashboard = () => {
           <h3 className="text-sm font-medium opacity-90">{t('yourTotalLoans')}</h3>
           <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.totalBorrowed)}</p>
           <p className="text-xs mt-1 opacity-80">
-            Interest Paid: {formatCurrency(dashboard.totalLoanInterestPaid)}
+            {t('yourTotalInterestPaid')} : {formatCurrency(dashboard.totalLoanInterestPaid)}
           </p>
         </div>
 
@@ -79,7 +93,7 @@ const MemberDashboard = () => {
           <h3 className="text-sm font-medium opacity-90">{t('yourCurrentLoan')}</h3>
           <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.currentLoans)}</p>
           <p className="text-xs mt-1 opacity-80">
-            Current Interest: {formatCurrency(dashboard.currentLoanInterest)}
+            {t('yourCurrentInterest')} : {formatCurrency(dashboard.currentLoanInterest)}
           </p>
         </div>
       </div>
@@ -102,10 +116,10 @@ const MemberDashboard = () => {
                     {t('returnDeposit')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Duration
+                    {t('duration')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('interestRate')}
+                    {t('monthlyInterest')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     {t('interestEarned')}
@@ -138,7 +152,11 @@ const MemberDashboard = () => {
                         {deposit.returnDate ? formatDate(deposit.returnDate) : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {deposit.durationDays ? `${deposit.durationMonths || 0} months ${deposit.durationDays} days` : '-'}
+                        {deposit.durationDays ? (
+                          <>
+                            {deposit.durationMonths || 0} {t('month')} {deposit.durationDays} {t('day')}
+                          </>
+                        ) : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                         {deposit.interestRate ? formatCurrency((deposit.amount * deposit.interestRate) / 100) : '-'}
@@ -186,13 +204,13 @@ const MemberDashboard = () => {
                     {t('returnDeposit')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Duration
+                    {t('duration')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('interestRate')}
+                    {t('monthlyInterest')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('interestPaid')}
+                    {t('totalInterest')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     {t('paidAmount')}
@@ -224,8 +242,13 @@ const MemberDashboard = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {loan.returnDate ? formatDate(loan.returnDate) : '-'}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {loan.durationDays ? `${loan.durationMonths || 0} months ${loan.durationDays} days` : '-'}
+                        {loan.durationDays ? (
+                          <>
+                            {loan.durationMonths || 0} {t('month')} {loan.durationDays} {t('day')}
+                          </>
+                        ) : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
                         {loan.interestRate ? formatCurrency((loan.loanAmount * loan.interestRate) / 100) : '-'}

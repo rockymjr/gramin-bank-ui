@@ -83,9 +83,6 @@ const Summary = () => {
               return formatCurrency(avail);
             })()}
           </p>
-          <p className="text-xs mt-1 opacity-80">
-            Cash on hand
-          </p>
         </div>
 
         {/* Bank Profit Card */}
@@ -96,9 +93,6 @@ const Summary = () => {
           <h3 className="text-sm sm:text-lg font-medium opacity-90">{t('bankProfit')}</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
             {formatCurrency(summary?.bankProfit)}
-          </p>
-          <p className="text-xs mt-1 opacity-80">
-            2.5% spread earned
           </p>
         </div>
       </div>

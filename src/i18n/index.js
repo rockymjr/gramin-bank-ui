@@ -26,6 +26,8 @@ const translations = {
     submit: 'Submit',
     close: 'Close',
     actions: 'Actions',
+    month: 'Month',
+    day: 'Day',
     
     // Dashboard
     totalDeposits: 'Total Deposits',
@@ -39,6 +41,9 @@ const translations = {
     yourTotalDeposits: 'Your Total Deposits',
     yourTotalLoans: 'Your Total Loans',
     yourCurrentLoan: 'Your Current Loan',
+    yourActiveDeposits: 'Your Active Deposits',
+    yourTotalInterestEarned: 'Your Total Interest Earned',
+    yourCurrentInterest: 'Your Current Interest',
     
     // Members
     members: 'Members',
@@ -128,8 +133,10 @@ const translations = {
     submit: 'जमा करें',
     close: 'बंद करें',
     actions: 'क्रियाएं',
+    month: 'महीना',
+    day: 'दिन',
     
-    // Dashboard
+    // Member Dashboard
     totalDeposits: 'कुल जमा',
     totalLoans: 'कुल ऋण',
     availableBalance: 'उपलब्ध शेष',
@@ -140,6 +147,9 @@ const translations = {
     yourTotalDeposits: 'आपकी कुल जमा',
     yourTotalLoans: 'आपकी कुल ऋण',
     yourCurrentLoan: 'आपकी वर्तमान ऋण',
+    yourActiveDeposits: 'आपकी सक्रिय जमा',
+    yourTotalInterestEarned: 'आपका कुल अर्जित ब्याज',
+    yourCurrentInterest: 'आपका वर्तमान ब्याज',
 
     
     // Members
@@ -230,19 +240,26 @@ const translations = {
     submit: 'জমা দিন',
     close: 'বন্ধ করুন',
     actions: 'action',
+    month: 'মাস',
+    day: 'দিন',
     
     // Dashboard
-    totalDeposits: 'মোট জমা',
-    totalLoans: 'মোট ঋণ',
-    availableBalance: 'বর্তমান ব্যালেন্স',
+    totalDeposits: 'মোট জমা পড়েছে',
+    totalLoans: 'মোট ঋণ দেওয়া হয়েছে',
+    availableBalance: 'ব্যাঙ্কের বর্তমান ব্যালেন্স',
     activeDeposits: 'বর্তমান জমা',
     activeLoans: 'বর্তমান ঋণ',
-    bankProfit: 'লাভ',
+    bankProfit: 'মোট লাভ হয়েছে',
     financialYear: 'বছর',
-    yourTotalDeposits: 'আপনার মোট জমা',  
-    yourTotalLoans: 'আপনার মোট ঋণ',
+    yourTotalDeposits: 'আপনি মোট জমা করেছেন',  
+    yourTotalLoans: 'আপনি মোট ঋণ নিয়েছেন',
     yourCurrentLoan: 'আপনার বর্তমান ঋণ',
-    
+    yourActiveDeposits: 'আপনার বর্তমান জমা আছে',
+    yourTotalInterestEarned: 'আপনি মোট সুদ পেয়েছেন',
+    yourCurrentInterest: 'আপনার বর্তমান পাবেন',
+    yourTotalInterestPaid: 'আপনি মোট সুদ দিয়েছেন',
+    yourCurrentInterest: 'আপনার বর্তমান সুদ হয়েছে ',
+
     // Members
     members: 'সদস্য',
     addMember: 'সদস্য যোগ করুন',
@@ -259,19 +276,22 @@ const translations = {
     amount: 'টাকা',
     depositDate: 'জমা তারিখ',
     interestRate: 'সুদের হার',
-    interestEarned: 'অর্জিত সুদ',
+    monthlyInterest: 'মাসিক সুদ',
+    interestEarned: 'মোট সুদ',
     currentInterest: 'বর্তমান সুদ',
-    totalAmount: 'মোট জমা',
-    returnDeposit: 'জমা ফেরত',
+    totalAmount: 'মোট টাকা',
+    returnDeposit: 'ফেরত তারিখ',
     currentTotal: 'বর্তমান মোট টাকা',
+    duration: 'সময়',
     
     // Loans
     sanctionLoan: 'ঋণ অনুমোদন করুন',
     loanAmount: 'ঋণের টাকা',
     loanDate: 'ঋণের তারিখ',
     interestPaid: 'প্রদত্ত সুদ',
-    paidAmount: 'প্রদত্ত পরিমাণ',
-    remainingAmount: 'অবশিষ্ট পরিমাণ',
+    paidAmount: 'জমা',
+    totalInterest : 'মোট সুদ',
+    remainingAmount: 'বাকি',
     addPayment: 'পেমেন্ট যোগ করুন',
     closeLoan: 'ঋণ বন্ধ করুন',
     paymentHistory: 'পেমেন্ট ইতিহাস',
