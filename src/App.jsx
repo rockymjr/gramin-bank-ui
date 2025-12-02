@@ -73,9 +73,9 @@ function AppRoutes() {
       <Route
         path="/admin/members"
         element={
-          <ProtectedRoute>
-            <MemberManagement />
-          </ProtectedRoute>
+          isOperator
+            ? <MemberManagement readOnly={true} />
+            : <ProtectedRoute><MemberManagement readOnly={false} /></ProtectedRoute>
         }
       />
       <Route

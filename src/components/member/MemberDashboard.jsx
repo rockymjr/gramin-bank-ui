@@ -54,18 +54,6 @@ const MemberDashboard = () => {
           </p>
         </div>
 
-        {/* Current Deposits */}
-        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="flex items-center justify-between mb-3">
-            <Wallet size={28} />
-            <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">Active</span>
-          </div>
-          <h3 className="text-sm font-medium opacity-90">Current Deposits</h3>
-          <p className="text-2xl font-bold mt-2">{formatCurrency(dashboard.currentDeposits)}</p>
-          <p className="text-xs mt-1 opacity-80">
-            Current Interest: {formatCurrency(dashboard.currentDepositInterest)}
-          </p>
-        </div>
 
         {/* Total Borrowed (All Time) */}
         <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-lg p-6 text-white">
@@ -109,10 +97,19 @@ const MemberDashboard = () => {
                     Amount
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Interest Earned
+                    Return Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Current Interest
+                    Duration
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Monthly Interest
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Total Interest
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Total Amount
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Status
@@ -135,18 +132,27 @@ const MemberDashboard = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {formatCurrency(deposit.amount)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                        {formatCurrency(deposit.interestEarned)}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {deposit.returnDate ? formatDate(deposit.returnDate) : '-'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-medium">
-                        {deposit.currentInterest ? formatCurrency(deposit.currentInterest) : '-'}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {deposit.durationDays ? `${deposit.durationMonths || 0} months ${deposit.durationDays} days` : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
+                        {deposit.interestRate ? formatCurrency((deposit.amount * deposit.interestRate) / 100) : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
+                        {formatCurrency(deposit.interestEarned || 0)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {formatCurrency(deposit.totalAmount || deposit.currentTotal || deposit.amount)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${deposit.status === 'ACTIVE'
-                            ? 'bg-green-100 text-green-800'
-                            : deposit.status === 'RETURNED'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
+                          ? 'bg-green-100 text-green-800'
+                          : deposit.status === 'RETURNED'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-800'
                           }`}>
                           {deposit.status}
                         </span>
@@ -175,16 +181,22 @@ const MemberDashboard = () => {
                     Amount
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Return Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Duration
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Monthly Interest
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Total Interest
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Paid
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Interest
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Current Interest
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Remaining
+                    Due
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Status
@@ -205,26 +217,33 @@ const MemberDashboard = () => {
                         {formatDate(loan.loanDate)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        {formatCurrency(loan.amount)}
+                        {formatCurrency(loan.loanAmount)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                        {formatCurrency(loan.paidAmount)}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {loan.returnDate ? formatDate(loan.returnDate) : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {loan.durationDays ? `${loan.durationMonths || 0} months ${loan.durationDays} days` : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                        {formatCurrency(loan.interestPaid)}
+                        {loan.interestRate ? formatCurrency((loan.loanAmount * loan.interestRate) / 100) : '-'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-700 font-medium">
-                        {loan.currentInterest ? formatCurrency(loan.currentInterest) : '-'}
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
+                        {formatCurrency(loan.currentInterest)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
+                        {formatCurrency(loan.totalRepayment)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-orange-600">
-                        {formatCurrency(loan.remainingAmount)}
+                        {formatCurrency(loan.currentRemaining)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${loan.status === 'ACTIVE'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : loan.status === 'CLOSED'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : loan.status === 'CLOSED'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-800'
                           }`}>
                           {loan.status}
                         </span>

@@ -33,7 +33,7 @@ const Summary = () => {
     <div className="container mx-auto px-4 py-6 sm:py-8">
 
       <div className="mb-4">
-        <h1 className="text-lg sm:text-2xl font-bold text-gray-800">Dhuripara Bank Fund Summary</h1>
+        <h1 className="text-lg sm:text-2xl font-bold text-gray-800">Dhuripara Gramin Bank Fund Summary</h1>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -72,7 +72,14 @@ const Summary = () => {
           </div>
           <h3 className="text-sm sm:text-lg font-medium opacity-90">Available Cash</h3>
           <p className="text-2xl sm:text-3xl font-bold mt-2 break-words">
-            {formatCurrency(summary?.availableBalance)}
+            {(() => {
+              const avail = summary?.availableBalance != null
+                ? summary.availableBalance
+                : (summary?.totalDeposits != null && summary?.totalLoans != null)
+                  ? summary.totalDeposits - summary.totalLoans
+                  : null;
+              return formatCurrency(avail);
+            })()}
           </p>
           <p className="text-xs mt-1 opacity-80">
             Cash on hand

@@ -167,9 +167,6 @@ const LoanManagement = ({ readOnly }) => {
               Duration
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Interest Rate
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Monthly Interest
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -229,10 +226,7 @@ const LoanManagement = ({ readOnly }) => {
                   {loan.durationDays ? `${loan.durationMonths} months ${loan.durationDays} days` : '-'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                  {loan.interestRate}%
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                  {formatCurrency((loan.loanAmount * loan.interestRate) / 100)}
+                  {formatCurrency((loan.loanAmount * (loan.interestRate || 0)) / 100)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
                   {formatCurrency(loan.currentInterest || loan.interestAmount)}

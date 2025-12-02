@@ -152,9 +152,6 @@ const DepositManagement = ({ readOnly }) => {
                   Duration
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                 Interest Rate
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Monthly Interest
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -166,9 +163,6 @@ const DepositManagement = ({ readOnly }) => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Notes
-                </th>
                 {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -179,7 +173,7 @@ const DepositManagement = ({ readOnly }) => {
             <tbody className="bg-white divide-y divide-gray-200">
               {deposits.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan="12" className="px-6 py-4 text-center text-gray-500">
                     No deposits found
                   </td>
                 </tr>
@@ -207,10 +201,7 @@ const DepositManagement = ({ readOnly }) => {
                       {deposit.durationDays ? `${deposit.durationMonths} months ${deposit.durationDays} days` : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                      {deposit.interestRate}%
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                      {formatCurrency((deposit.amount * deposit.interestRate) / 100)}
+                      {formatCurrency((deposit.amount * (deposit.interestRate || 0)) / 100)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
                       {formatCurrency(deposit.currentInterest || deposit.interestEarned)}
@@ -228,9 +219,7 @@ const DepositManagement = ({ readOnly }) => {
                         {deposit.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {deposit.notes ? deposit.notes.substring(0, 50) + (deposit.notes.length > 50 ? '...' : '') : '-'}
-                    </td>
+                    
                     {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">

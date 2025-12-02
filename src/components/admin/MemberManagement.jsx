@@ -5,6 +5,7 @@ import { Search, UserPlus, Edit, Trash2 } from 'lucide-react';
 import Loader from '../common/Loader';
 import MemberForm from './MemberForm';
 import { formatDate } from '../../utils/dateFormatter';
+import { useMemberAuth } from '../../context/MemberAuthContext';
 
 const MemberManagement = () => {
   const [members, setMembers] = useState([]);
@@ -12,6 +13,7 @@ const MemberManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
+  const { isOperator } = useMemberAuth();
 
   useEffect(() => {
     fetchMembers();
@@ -72,13 +74,15 @@ const MemberManagement = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Member Management</h2>
-        <button
-          onClick={handleAddNew}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
-        >
-          <UserPlus size={20} />
-          <span>Add Member</span>
-        </button>
+        {!isOperator && (
+          <button
+            onClick={handleAddNew}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
+          >
+            <UserPlus size={20} />
+            <span>Add Member</span>
+          </button>
+        )}
       </div>
 
       {/* Search Bar */}
@@ -126,20 +130,23 @@ const MemberManagement = () => {
                   Phone
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Joining Date
+                  PIN
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                {!isOperator &&
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>}
+                {!isOperator &&
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                }
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {members.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
                     No members found
                   </td>
                 </tr>
@@ -157,35 +164,40 @@ const MemberManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {member.phone}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(member.joiningDate)}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
+                      {member.pin || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        member.isActive 
-                          ? 'bg-green-100 text-green-800' 
+                    {!isOperator &&
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${member.isActive
+                          ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
-                      }`}>
-                        {member.isActive ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleEdit(member)}
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          <Edit size={18} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(member.id)}
-                          className="text-red-600 hover:text-red-900"
-                          disabled={!member.isActive}
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </td>
+                          }`}>
+                          {member.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                    }
+                    {!isOperator &&
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div className="flex space-x-2">
+                          <>
+                            <button
+                              onClick={() => handleEdit(member)}
+                              className="text-blue-600 hover:text-blue-900"
+                            >
+                              <Edit size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(member.id)}
+                              className="text-red-600 hover:text-red-900"
+                              disabled={!member.isActive}
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </>
+                        </div>
+                      </td>
+                    }
                   </tr>
                 ))
               )}
