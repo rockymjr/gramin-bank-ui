@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 import { Link } from 'react-router-dom';
 import { adminService } from '../../services/adminService';
 import { formatCurrency } from '../../utils/formatCurrency';
@@ -79,19 +80,20 @@ const LoanManagement = ({ readOnly }) => {
     setShowForm(true);
   };
 
-  if (loading) return <Loader message="Loading loans..." />;
+  const { t } = useLanguage();
+  if (loading) return <Loader message={t('loadingLoans') || 'Loading loans...'} />;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Loan Management</h2>
+        <h2 className="text-2xl font-bold text-gray-800">{t('loanManagement') || 'Loan Management'}</h2>
         {!readOnly && (
           <button
             onClick={handleAddNew}
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition"
           >
             <Plus size={20} />
-            <span>Sanction Loan</span>
+            <span>{t('sanctionLoan') || 'Sanction Loan'}</span>
           </button>
         )}
       </div>
@@ -99,7 +101,7 @@ const LoanManagement = ({ readOnly }) => {
       {/* Status Filter */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
+          <label className="text-sm font-medium text-gray-700">{t('filterByStatus') || 'Filter by Status:'}</label>
           <div className="flex space-x-2">
             <button
               onClick={() => {
@@ -112,7 +114,7 @@ const LoanManagement = ({ readOnly }) => {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              All Loans
+              {t('allLoans') || 'All Loans'}
             </button>
             <button
               onClick={() => {
@@ -125,7 +127,7 @@ const LoanManagement = ({ readOnly }) => {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              Active
+              {t('active') || 'Active'}
             </button>
             <button
               onClick={() => {
@@ -138,7 +140,7 @@ const LoanManagement = ({ readOnly }) => {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              Closed
+              {t('closed') || 'Closed'}
             </button>
           </div>
         </div>
@@ -147,23 +149,23 @@ const LoanManagement = ({ readOnly }) => {
       <StyledTable
         renderHeader={() => (
           <>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Member Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Loan Amount</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Paid / Discount</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Loan Date</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Return Date</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Duration</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Monthly Interest</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest'}</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? 'Remaining' : 'Total Repayment'}</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Status</th>
-            {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Actions</th>}
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('memberName') || 'Member Name'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('loanAmount') || 'Loan Amount'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('paidDiscount') || 'Paid / Discount'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('loanDate') || 'Loan Date'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('returnDate') || 'Return Date'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('duration') || 'Duration'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('monthlyInterest') || 'Monthly Interest'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('totalInterest')}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? (t('remaining') || 'Remaining') : (t('totalRepayment') || 'Total Repayment')}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('status') || 'Status'}</th>
+            {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('actions') || 'Actions'}</th>}
           </>
         )}
       >
         {loans.length === 0 ? (
           <tr>
-            <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No loans found</td>
+            <td colSpan="8" className="px-6 py-4 text-center text-gray-500">{t('noLoansFound') || 'No loans found'}</td>
           </tr>
         ) : (
           loans.map((loan) => (
@@ -173,7 +175,7 @@ const LoanManagement = ({ readOnly }) => {
               <td className="px-6 py-4 whitespace-nowrap text-sm"><div className="text-green-600 font-medium">{formatCurrency(loan.paidAmount || 0)}</div>{loan.discountAmount > 0 && (<div className="text-orange-600 text-xs">-{formatCurrency(loan.discountAmount)}</div>)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(loan.loanDate)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.returnDate ? formatDate(loan.returnDate) : '-'}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm">{loan.durationDays ? `${loan.durationMonths} months ${loan.durationDays} days` : '-'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm">{loan.durationDays ? (<>{loan.durationMonths || 0} {t('month')} {loan.durationDays} {t('day')}</>) : '-'}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{formatCurrency((loan.loanAmount * (loan.interestRate || 0)) / 100)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{formatCurrency(loan.currentInterest || loan.interestAmount)}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{statusFilter === 'ACTIVE' ? (<span className="text-red-700">{formatCurrency(loan.currentRemaining || loan.remainingAmount || 0)}</span>) : (formatCurrency(loan.totalRepayment))}</td>
@@ -213,13 +215,11 @@ const LoanManagement = ({ readOnly }) => {
         </div>
       </div>
     </div>
+    {!readOnly && showForm && <LoanForm loan={editingLoan} onClose={handleFormClose} />}
+    {!readOnly && closingLoan && <LoanClosure loan={closingLoan} onClose={handleClosureComplete} />}
+    {!readOnly && paymentLoan && <LoanPayment loan={paymentLoan} onClose={handlePaymentComplete} />}
+    {historyLoan && <LoanPaymentHistory loan={historyLoan} onClose={() => setHistoryLoan(null)} />}
   </div>
-
-  {!readOnly && showForm && <LoanForm loan={editingLoan} onClose={handleFormClose} />}
-  {!readOnly && closingLoan && <LoanClosure loan={closingLoan} onClose={handleClosureComplete} />}
-  {!readOnly && paymentLoan && <LoanPayment loan={paymentLoan} onClose={handlePaymentComplete} />}
-  {historyLoan && <LoanPaymentHistory loan={historyLoan} onClose={() => setHistoryLoan(null)} />}
-</div>
-);
+  );
 };
 export default LoanManagement;

@@ -79,7 +79,7 @@ const LoanList = () => {
       >
         {loans.length === 0 ? (
           <tr>
-            <td colSpan="4" className="px-6 py-4 text-center text-gray-500">No loans found</td>
+            <td colSpan="4" className="px-6 py-4 text-center text-gray-500">{t('noLoansFound')}</td>
           </tr>
         ) : (
           loans.map((loan) => (

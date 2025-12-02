@@ -44,6 +44,7 @@ const translations = {
     yourActiveDeposits: 'Your Active Deposits',
     yourTotalInterestEarned: 'Your Total Interest Earned',
     yourCurrentInterest: 'Your Current Interest',
+    totalInterest: 'Total Interest',
     
     // Members
     members: 'Members',
@@ -66,6 +67,8 @@ const translations = {
     totalAmount: 'Total Amount',
     returnDeposit: 'Return Deposit',
     currentTotal: 'Current Total',
+    returnDate: 'Return Date',
+    depositManagement: 'Deposit Management',
     
     // Loans
     sanctionLoan: 'Sanction Loan',
@@ -77,7 +80,12 @@ const translations = {
     addPayment: 'Add Payment',
     closeLoan: 'Close Loan',
     paymentHistory: 'Payment History',
-    
+    paidDiscount: 'Paid',
+    loanManagement: 'Loan Management',
+    loadingLoans: 'Loading Loans...',
+    allLoans: 'All Loans',
+    noLoansFound: 'No Loans Found',
+
     // Status
     active: 'Active',
     closed: 'Closed',
@@ -150,6 +158,7 @@ const translations = {
     yourActiveDeposits: 'आपकी सक्रिय जमा',
     yourTotalInterestEarned: 'आपका कुल अर्जित ब्याज',
     yourCurrentInterest: 'आपका वर्तमान ब्याज',
+    totalInterest: 'कुल ब्याज',
 
     
     // Members
@@ -173,6 +182,8 @@ const translations = {
     totalAmount: 'कुल राशि',
     returnDeposit: 'जमा वापसी',
     currentTotal: 'वर्तमान कुल',
+    returnDate: 'वापसी तिथि',
+    depositManagement: 'जमा प्रबंधन',
     
     // Loans
     sanctionLoan: 'ऋण स्वीकृत करें',
@@ -184,6 +195,11 @@ const translations = {
     addPayment: 'भुगतान जोड़ें',
     closeLoan: 'ऋण बंद करें',
     paymentHistory: 'भुगतान इतिहास',
+    paidDiscount: 'भुगतान किया गया',
+    loanManagement: 'ऋण प्रबंधन',
+    loadingLoans: 'ऋण लोड हो रहा है...',
+    allLoans: 'सभी ऋण',
+    noLoansFound: 'कोई ऋण नहीं मिला',
     
     // Status
     active: 'सक्रिय',
@@ -230,7 +246,7 @@ const translations = {
     
     // Common
     save: 'save',
-    cancel: 'cancel',
+    cancel: 'Cancel',
     delete: 'delete',
     edit: 'edit',
     view: 'দেখুন',
@@ -259,6 +275,7 @@ const translations = {
     yourCurrentInterest: 'আপনার বর্তমান পাবেন',
     yourTotalInterestPaid: 'আপনি মোট সুদ দিয়েছেন',
     yourCurrentInterest: 'আপনার বর্তমান সুদ হয়েছে ',
+    totalInterest: 'মোট সুদ',
 
     // Members
     members: 'সদস্য',
@@ -283,6 +300,9 @@ const translations = {
     returnDeposit: 'ফেরত তারিখ',
     currentTotal: 'বর্তমান মোট টাকা',
     duration: 'সময়',
+    allDeposits: 'সমস্ত জমা',
+    returnDate: 'ফেরত তারিখ',
+    depositManagement: 'জমা ব্যবস্থাপনা',
     
     // Loans
     sanctionLoan: 'ঋণ অনুমোদন করুন',
@@ -295,6 +315,11 @@ const translations = {
     addPayment: 'পেমেন্ট যোগ করুন',
     closeLoan: 'ঋণ বন্ধ করুন',
     paymentHistory: 'পেমেন্ট ইতিহাস',
+    paidDiscount: 'জমা',
+    loanManagement: 'ঋণ ব্যবস্থাপনা',
+    loadingLoans: 'ঋণ লোড হচ্ছে..',
+    allLoans: 'সমস্ত ঋণ',
+    noLoansFound: 'কোন ঋণ পাওয়া যায়নি',
     
     // Status
     active: 'সক্রিয়',
