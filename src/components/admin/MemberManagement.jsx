@@ -7,6 +7,7 @@ import Loader from '../common/Loader';
 import MemberForm from './MemberForm';
 import { formatDate } from '../../utils/dateFormatter';
 import { useMemberAuth } from '../../context/MemberAuthContext';
+import StyledTable from '../common/StyledTable';
 
 const MemberManagement = () => {
   const { t } = useLanguage();
@@ -120,93 +121,35 @@ const MemberManagement = () => {
       </form>
 
       {/* Members Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+      <StyledTable
+            renderHeader={() => (
+              <>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('memberName')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('phone')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('pin')}</th>
+                {!isOperator && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('status')}</th>}
+                {!isOperator && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('actions')}</th>}
+              </>
+            )}
+          >
+            {members.length === 0 ? (
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('memberName')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('phone')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('pin')}
-                </th>
-                {!isOperator &&
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('status')}
-                  </th>}
-                {!isOperator &&
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t('actions')}
-                  </th>
-                }
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">No members found</td>
               </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {members.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
-                    No members found
+            ) : (
+              members.map((member) => (
+                <tr key={member.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <Link to={`/admin/statements?memberId=${member.id}`} className="text-blue-600 hover:underline">{member.firstName} {member.lastName}</Link>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.phone}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">{member.pin || '-'}</td>
+                  {!isOperator && <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${member.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{member.isActive ? 'Active' : 'Inactive'}</span></td>}
+                  {!isOperator && <td className="px-6 py-4 whitespace-nowrap text-sm font-medium"><div className="flex space-x-2"><><button onClick={() => handleEdit(member)} className="text-blue-600 hover:text-blue-900"><Edit size={18} /></button><button onClick={() => handleDelete(member.id)} className="text-red-600 hover:text-red-900" disabled={!member.isActive}><Trash2 size={18} /></button></></div></td>}
                 </tr>
-              ) : (
-                members.map((member) => (
-                  <tr key={member.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      <Link
-                        to={`/admin/statements?memberId=${member.id}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {member.firstName} {member.lastName}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {member.phone}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
-                      {member.pin || '-'}
-                    </td>
-                    {!isOperator &&
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${member.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                          }`}>
-                          {member.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                      </td>
-                    }
-                    {!isOperator &&
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          <>
-                            <button
-                              onClick={() => handleEdit(member)}
-                              className="text-blue-600 hover:text-blue-900"
-                            >
-                              <Edit size={18} />
-                            </button>
-                            <button
-                              onClick={() => handleDelete(member.id)}
-                              className="text-red-600 hover:text-red-900"
-                              disabled={!member.isActive}
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </>
-                        </div>
-                      </td>
-                    }
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              ))
+            )}
+          </StyledTable>
 
       {/* Member Form Modal */}
       {showForm && (

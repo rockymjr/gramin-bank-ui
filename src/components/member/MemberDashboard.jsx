@@ -4,6 +4,7 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
 import { useLanguage } from '../../context/LanguageContext';
 import Loader from '../common/Loader';
+import StyledTable from '../common/StyledTable';
 import { Wallet, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 const MemberDashboard = () => {
@@ -101,185 +102,79 @@ const MemberDashboard = () => {
       {/* Deposits Table */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('deposits')}</h2>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('depositDate')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('amount')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('returnDeposit')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('duration')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('monthlyInterest')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('interestEarned')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('totalAmount')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('status')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {dashboard.deposits.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
-                      No deposits found
-                    </td>
-                  </tr>
-                ) : (
-                  dashboard.deposits.map((deposit, idx) => (
-                    <tr key={idx}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {formatDate(deposit.depositDate)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        {formatCurrency(deposit.amount)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {deposit.returnDate ? formatDate(deposit.returnDate) : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {deposit.durationDays ? (
-                          <>
-                            {deposit.durationMonths || 0} {t('month')} {deposit.durationDays} {t('day')}
-                          </>
-                        ) : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                        {deposit.interestRate ? formatCurrency((deposit.amount * deposit.interestRate) / 100) : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                        {formatCurrency(deposit.interestEarned || 0)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {formatCurrency(deposit.totalAmount || deposit.currentTotal || deposit.amount)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${deposit.status === 'ACTIVE'
-                          ? 'bg-green-100 text-green-800'
-                          : deposit.status === 'RETURNED'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-800'
-                          }`}>
-                          {deposit.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <StyledTable
+          renderHeader={() => (
+            <>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('depositDate')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('amount')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('returnDeposit')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('duration')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('monthlyInterest')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('interestEarned')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('totalAmount')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('status')}</th>
+            </>
+          )}
+        >
+          {dashboard.deposits.length === 0 ? (
+            <tr>
+              <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No deposits found</td>
+            </tr>
+          ) : (
+            dashboard.deposits.map((deposit, idx) => (
+              <tr key={idx} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{formatDate(deposit.depositDate)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{formatCurrency(deposit.amount)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{deposit.returnDate ? formatDate(deposit.returnDate) : '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{deposit.durationDays ? (<>{deposit.durationMonths || 0} {t('month')} {deposit.durationDays} {t('day')}</>) : '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{deposit.interestRate ? formatCurrency((deposit.amount * deposit.interestRate) / 100) : '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{formatCurrency(deposit.interestEarned || 0)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(deposit.totalAmount || deposit.currentTotal || deposit.amount)}</td>
+                <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 py-1 text-xs font-semibold rounded-full ${deposit.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : deposit.status === 'RETURNED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>{deposit.status}</span></td>
+              </tr>
+            ))
+          )}
+        </StyledTable>
       </div>
 
       {/* Loans Table */}
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('loans')}</h2>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('loanDate')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('loanAmount')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('returnDeposit')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('duration')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('monthlyInterest')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('totalInterest')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('paidAmount')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('remainingAmount')}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t('status')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {dashboard.loans.length === 0 ? (
-                  <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
-                      No loans found
-                    </td>
-                  </tr>
-                ) : (
-                  dashboard.loans.map((loan, idx) => (
-                    <tr key={idx}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {formatDate(loan.loanDate)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        {formatCurrency(loan.loanAmount)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {loan.returnDate ? formatDate(loan.returnDate) : '-'}
-                      </td>
-
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {loan.durationDays ? (
-                          <>
-                            {loan.durationMonths || 0} {t('month')} {loan.durationDays} {t('day')}
-                          </>
-                        ) : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                        {loan.interestRate ? formatCurrency((loan.loanAmount * loan.interestRate) / 100) : '-'}
-                      </td>
-
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                        {formatCurrency(loan.currentInterest)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                        {formatCurrency(loan.totalRepayment)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-orange-600">
-                        {formatCurrency(loan.currentRemaining)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${loan.status === 'ACTIVE'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : loan.status === 'CLOSED'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-800'
-                          }`}>
-                          {loan.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <StyledTable
+          renderHeader={() => (
+            <>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('loanDate')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('loanAmount')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('returnDeposit')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('duration')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('monthlyInterest')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('totalInterest')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('paidAmount')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('remainingAmount')}</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('status')}</th>
+            </>
+          )}
+        >
+          {dashboard.loans.length === 0 ? (
+            <tr>
+              <td colSpan="9" className="px-6 py-4 text-center text-gray-500">No loans found</td>
+            </tr>
+          ) : (
+            dashboard.loans.map((loan, idx) => (
+              <tr key={idx} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{formatDate(loan.loanDate)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{formatCurrency(loan.loanAmount)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.returnDate ? formatDate(loan.returnDate) : '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{loan.durationDays ? (<>{loan.durationMonths || 0} {t('month')} {loan.durationDays} {t('day')}</>) : '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{loan.interestRate ? formatCurrency((loan.loanAmount * loan.interestRate) / 100) : '-'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{formatCurrency(loan.currentInterest)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{formatCurrency(loan.totalRepayment)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-orange-600">{formatCurrency(loan.currentRemaining)}</td>
+                <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 py-1 text-xs font-semibold rounded-full ${loan.status === 'ACTIVE' ? 'bg-yellow-100 text-yellow-800' : loan.status === 'CLOSED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>{loan.status}</span></td>
+              </tr>
+            ))
+          )}
+        </StyledTable>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Plus, RotateCcw, Edit, ChevronLeft, ChevronRight } from 'lucide-react';
 import Loader from '../common/Loader';
 import DepositForm from './DepositForm';
 import DepositReturn from './DepositReturn';
+import StyledTable from '../common/StyledTable';
 
 const DepositManagement = ({ readOnly }) => {
   const [deposits, setDeposits] = useState([]);
@@ -131,125 +132,43 @@ const DepositManagement = ({ readOnly }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Member Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Deposit Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Return Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Duration
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Monthly Interest
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest Earned'}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {statusFilter === 'ACTIVE' ? 'Current Total' : 'Total Amount'}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {deposits.length === 0 ? (
-                <tr>
-                  <td colSpan="12" className="px-6 py-4 text-center text-gray-500">
-                    No deposits found
-                  </td>
-                </tr>
-              ) : (
-                deposits.map((deposit) => (
-                  <tr key={deposit.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      <Link
-                        to={`/admin/statements?memberId=${deposit.memberId}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {deposit.memberName}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(deposit.amount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(deposit.depositDate)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {deposit.returnDate ? formatDate(deposit.returnDate) : '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {deposit.durationDays ? `${deposit.durationMonths} months ${deposit.durationDays} days` : '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                      {formatCurrency((deposit.amount * (deposit.interestRate || 0)) / 100)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">
-                      {formatCurrency(deposit.currentInterest || deposit.interestEarned)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {formatCurrency(deposit.currentTotal || deposit.totalAmount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${deposit.status === 'ACTIVE'
-                        ? 'bg-green-100 text-green-800'
-                        : deposit.status === 'RETURNED'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                        }`}>
-                        {deposit.status}
-                      </span>
-                    </td>
-                    
-                    {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          {(deposit.status === 'ACTIVE' || statusFilter === 'ALL') && (
-                            <>
-                              <button
-                                onClick={() => handleEdit(deposit)}
-                                className="text-blue-600 hover:text-blue-900"
-                                title="Edit"
-                              >
-                                <Edit size={18} />
-                              </button>
-                              <button
-                                onClick={() => setReturningDeposit(deposit)}
-                                className="text-green-600 hover:text-green-900"
-                                title="Return"
-                              >
-                                <RotateCcw size={18} />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      <StyledTable
+        renderHeader={() => (
+          <>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Member Name</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Amount</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Deposit Date</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Return Date</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Duration</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Monthly Interest</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest Earned'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? 'Current Total' : 'Total Amount'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Status</th>
+            {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Actions</th>}
+          </>
+        )}
+      >
+        {deposits.length === 0 ? (
+          <tr>
+            <td colSpan="12" className="px-6 py-4 text-center text-gray-500">No deposits found</td>
+          </tr>
+        ) : (
+          deposits.map((deposit) => (
+            <tr key={deposit.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><Link to={`/admin/statements?memberId=${deposit.memberId}`} className="text-blue-600 hover:underline">{deposit.memberName}</Link></td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(deposit.amount)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(deposit.depositDate)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{deposit.returnDate ? formatDate(deposit.returnDate) : '-'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm">{deposit.durationDays ? `${deposit.durationMonths} months ${deposit.durationDays} days` : '-'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{formatCurrency((deposit.amount * (deposit.interestRate || 0)) / 100)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{formatCurrency(deposit.currentInterest || deposit.interestEarned)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{formatCurrency(deposit.currentTotal || deposit.totalAmount)}</td>
+              <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${deposit.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : deposit.status === 'RETURNED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>{deposit.status}</span></td>
+              {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (<td className="px-6 py-4 whitespace-nowrap text-sm font-medium"><div className="flex space-x-2">{(deposit.status === 'ACTIVE' || statusFilter === 'ALL') && (<><button onClick={() => handleEdit(deposit)} className="text-blue-600 hover:text-blue-900" title="Edit"><Edit size={18} /></button><button onClick={() => setReturningDeposit(deposit)} className="text-green-600 hover:text-green-900" title="Return"><RotateCcw size={18} /></button></>)}</div></td>)}
+            </tr>
+          ))
+        )}
+      </StyledTable>
 
         {/* Pagination */}
         <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">

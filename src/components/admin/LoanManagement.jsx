@@ -9,6 +9,7 @@ import LoanForm from './LoanForm';
 import LoanClosure from './LoanClosure';
 import LoanPayment from './LoanPayment';
 import LoanPaymentHistory from './LoanPaymentHistory';
+import StyledTable from '../common/StyledTable';
 
 const LoanManagement = ({ readOnly }) => {
   const [loans, setLoans] = useState([]);
@@ -143,160 +144,45 @@ const LoanManagement = ({ readOnly }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+      <StyledTable
+        renderHeader={() => (
+          <>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Member Name</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Loan Amount</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Paid / Discount</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Loan Date</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Return Date</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Duration</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Monthly Interest</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? 'Remaining' : 'Total Repayment'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Status</th>
+            {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">Actions</th>}
+          </>
+        )}
+      >
+        {loans.length === 0 ? (
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Member Name
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Loan Amount
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Paid / Discount
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Loan Date
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Return Date
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Duration
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Monthly Interest
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {statusFilter === 'ACTIVE' ? 'Current Interest' : 'Interest'}
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {statusFilter === 'ACTIVE' ? 'Remaining' : 'Total Repayment'}
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
-            </th>
-                {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                )}
+            <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No loans found</td>
           </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {loans.length === 0 ? (
-            <tr>
-              <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
-                No loans found
-              </td>
+        ) : (
+          loans.map((loan) => (
+            <tr key={loan.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><Link to={`/admin/statements?memberId=${loan.memberId}`} className="text-blue-600 hover:underline">{loan.memberName}</Link></td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(loan.loanAmount)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm"><div className="text-green-600 font-medium">{formatCurrency(loan.paidAmount || 0)}</div>{loan.discountAmount > 0 && (<div className="text-orange-600 text-xs">-{formatCurrency(loan.discountAmount)}</div>)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(loan.loanDate)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{loan.returnDate ? formatDate(loan.returnDate) : '-'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm">{loan.durationDays ? `${loan.durationMonths} months ${loan.durationDays} days` : '-'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{formatCurrency((loan.loanAmount * (loan.interestRate || 0)) / 100)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">{formatCurrency(loan.currentInterest || loan.interestAmount)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{statusFilter === 'ACTIVE' ? (<span className="text-red-700">{formatCurrency(loan.currentRemaining || loan.remainingAmount || 0)}</span>) : (formatCurrency(loan.totalRepayment))}</td>
+              <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${loan.status === 'ACTIVE' ? 'bg-yellow-100 text-yellow-800' : loan.status === 'CLOSED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>{ loan.status}</span></td>
+              {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (<td className="px-6 py-4 whitespace-nowrap text-sm font-medium"><div className="flex space-x-2">{(loan.status === 'ACTIVE' || statusFilter === 'ALL') && (<><button onClick={() => handleEdit(loan)} className="text-blue-600 hover:text-blue-900" title="Edit"><Edit size={18} /></button><button onClick={() => setPaymentLoan(loan)} className="text-green-600 hover:text-green-900" title="Add Payment"><DollarSign size={18} /></button><button onClick={() => setClosingLoan(loan)} className="text-orange-600 hover:text-orange-900" title="Close Loan"><XCircle size={18} /></button></>) }{(loan.paidAmount > 0 || loan.status === 'CLOSED') && (<button onClick={() => setHistoryLoan(loan)} className="text-purple-600 hover:text-purple-900" title="Payment History"><History size={18} /></button>)}</div></td>)}
             </tr>
-          ) : (
-            loans.map((loan) => (
-              <tr key={loan.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  <Link
-                    to={`/admin/statements?memberId=${loan.memberId}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {loan.memberName}
-                  </Link>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatCurrency(loan.loanAmount)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <div className="text-green-600 font-medium">
-                    {formatCurrency(loan.paidAmount || 0)}
-                  </div>
-                  {loan.discountAmount > 0 && (
-                    <div className="text-orange-600 text-xs">
-                      -{formatCurrency(loan.discountAmount)}
-                    </div>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(loan.loanDate)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {loan.returnDate ? formatDate(loan.returnDate) : '-'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  {loan.durationDays ? `${loan.durationMonths} months ${loan.durationDays} days` : '-'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                  {formatCurrency((loan.loanAmount * (loan.interestRate || 0)) / 100)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                  {formatCurrency(loan.currentInterest || loan.interestAmount)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {statusFilter === 'ACTIVE' ? (
-                    <span className="text-red-700">
-                      {formatCurrency(loan.currentRemaining || loan.remainingAmount || 0)}
-                    </span>
-                  ) : (
-                    formatCurrency(loan.totalRepayment)
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    loan.status === 'ACTIVE' 
-                      ? 'bg-yellow-100 text-yellow-800' 
-                      : loan.status === 'CLOSED'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    { loan.status}
-                  </span>
-                </td>
-                {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && (
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      {(loan.status === 'ACTIVE' || statusFilter === 'ALL') && (
-                        <>
-                          <button
-                            onClick={() => handleEdit(loan)}
-                            className="text-blue-600 hover:text-blue-900"
-                            title="Edit"
-                          >
-                            <Edit size={18} />
-                          </button>
-                          <button
-                            onClick={() => setPaymentLoan(loan)}
-                            className="text-green-600 hover:text-green-900"
-                            title="Add Payment"
-                          >
-                            <DollarSign size={18} />
-                          </button>
-                          <button
-                            onClick={() => setClosingLoan(loan)}
-                            className="text-orange-600 hover:text-orange-900"
-                            title="Close Loan"
-                          >
-                            <XCircle size={18} />
-                          </button>
-                        </>
-                      )}
-                      {(loan.paidAmount > 0 || loan.status === 'CLOSED') && (
-                        <button
-                          onClick={() => setHistoryLoan(loan)}
-                          className="text-purple-600 hover:text-purple-900"
-                          title="Payment History"
-                        >
-                          <History size={18} />
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                )}
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+          ))
+        )}
+      </StyledTable>
 
     {/* Pagination */}
     <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">

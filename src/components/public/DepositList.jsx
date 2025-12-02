@@ -4,6 +4,7 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/dateFormatter';
 import { useLanguage } from '../../context/LanguageContext';
 import Loader from '../common/Loader';
+import StyledTable from '../common/StyledTable';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const DepositList = () => {
@@ -66,62 +67,31 @@ const DepositList = () => {
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden sm:block bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('memberName')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('amount')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('depositDate')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('status')}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {deposits.length === 0 ? (
-                <tr>
-                  <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
-                    {t('notFound')}
-                  </td>
-                </tr>
-              ) : (
-                deposits.map((deposit) => (
-                  <tr key={deposit.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {deposit.memberName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(deposit.amount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(deposit.depositDate)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        deposit.status === 'ACTIVE'
-                          ? 'bg-green-100 text-green-800'
-                          : deposit.status === 'RETURNED'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {deposit.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <StyledTable
+        renderHeader={() => (
+          <>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('memberName')}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('amount')}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('depositDate')}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('status')}</th>
+          </>
+        )}
+      >
+        {deposits.length === 0 ? (
+          <tr>
+            <td colSpan="4" className="px-6 py-4 text-center text-gray-500">{t('notFound')}</td>
+          </tr>
+        ) : (
+          deposits.map((deposit) => (
+            <tr key={deposit.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{deposit.memberName}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(deposit.amount)}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(deposit.depositDate)}</td>
+              <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${deposit.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : deposit.status === 'RETURNED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>{deposit.status}</span></td>
+            </tr>
+          ))
+        )}
+      </StyledTable>
 
       {/* Pagination */}
       <div className="mt-4 sm:mt-6 flex items-center justify-between">
