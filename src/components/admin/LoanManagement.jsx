@@ -101,7 +101,6 @@ const LoanManagement = ({ readOnly }) => {
       {/* Status Filter */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">{t('filterByStatus') || 'Filter by Status:'}</label>
           <div className="flex space-x-2">
             <button
               onClick={() => {
