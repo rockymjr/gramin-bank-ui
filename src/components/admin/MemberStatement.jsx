@@ -86,6 +86,7 @@ const MemberStatement = ({ readOnly }) => {
           </div>
 
           {/* Deposits Section */}
+{          /*if statement.deposits && statement.deposits.length > 0  then display following section */}
           <div className="mb-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-3">{t('deposits') || 'Deposits'}</h4>
             {statement.deposits && statement.deposits.length > 0 ? (
@@ -147,13 +148,14 @@ const MemberStatement = ({ readOnly }) => {
                 {statement.loans.map((loan) => (
                   <tr key={loan.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                     <td className="px-4 py-2 whitespace-nowrap text-sm">{formatDate(loan.loanDate)}</td>
-                    <td className="px-4 py-2 text-sm">{loan.returnDate ? formatDate(loan.returnDate) : '-'}</td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm">{loan.returnDate ? formatDate(loan.returnDate) : '-'}</td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm">{loan.durationDays ? (<>{loan.durationMonths || 0} {t('month')} {loan.durationDays} {t('day')}</>) : '-'}</td>
                     <td className="px-4 py-2 text-sm">{formatCurrency(loan.loanAmount)}</td>
                     <td className="px-4 py-2 text-sm text-red-600">{formatCurrency((loan.loanAmount * loan.interestRate) / 100 || 0)}</td>
-                    <td className="px-4 py-2 text-sm text-red-600">{formatCurrency(loan.currentInterest)}</td>
-                    <td className="px-4 py-2 text-sm text-red-600">{formatCurrency(loan.currentTotal)}</td>
-                    <td className="px-4 py-2 text-sm font-medium">{formatCurrency(loan.totalRepayment)}</td>
+                    <td className="px-4 py-2 text-sm text-red-600"> {formatCurrency(loan.currentInterest)}</td>
+                    <td className="px-4 py-2 text-sm text-red-600"> {formatCurrency(loan.currentRemaining)}</td>
+                    <td className="px-4 py-2 text-sm text-red-600"> {loan.status === 'ACTIVE' ?  formatCurrency(loan.paidAmount): formatCurrency(loan.totalRepayment)} </td>
+                  
                     <td className="px-4 py-2 text-sm">
                       <span className={`px-2 py-1 text-xs rounded-full ${loan.status === 'ACTIVE' ? 'bg-yellow-100 text-yellow-800' : loan.status === 'CLOSED' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
                         {loan.status === 'ACTIVE' ? t('active') : loan.status === 'CLOSED' ? t('closed') : loan.status}

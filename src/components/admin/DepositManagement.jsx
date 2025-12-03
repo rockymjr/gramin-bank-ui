@@ -28,7 +28,7 @@ const DepositManagement = ({ readOnly }) => {
   const fetchDeposits = async () => {
     try {
       setLoading(true);
-      const data = await adminService.getAllDeposits(statusFilter, page, 10);
+      const data = await adminService.getAllDeposits(statusFilter, page, 20);
       const sorted = [...data.content].sort((a, b) => {
         const dateA = new Date(b.depositDate);
         const dateB = new Date(a.depositDate);

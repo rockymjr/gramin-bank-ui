@@ -32,7 +32,7 @@ const LoanManagement = ({ readOnly }) => {
   const fetchLoans = async () => {
     try {
       setLoading(true);
-      const data = await adminService.getAllLoans(statusFilter, page, 10);
+      const data = await adminService.getAllLoans(statusFilter, page, 20);
       // Sort by loan date in descending order (newest first)
       const sorted = [...data.content].sort((a, b) => {
         return new Date(b.loanDate) - new Date(a.loanDate);
@@ -149,14 +149,14 @@ const LoanManagement = ({ readOnly }) => {
         renderHeader={() => (
           <>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('memberName') || 'Member Name'}</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('loanAmount') || 'Loan Amount'}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white whitespace-nowrap uppercase tracking-wide">{t('loanAmount') || 'Loan Amount'}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('paidDiscount') || 'Paid / Discount'}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('loanDate') || 'Loan Date'}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('returnDate') || 'Return Date'}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('duration') || 'Duration'}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('monthlyInterest') || 'Monthly Interest'}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('totalInterest')}</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? (t('remaining') || 'Remaining') : (t('totalRepayment') || 'Total Repayment')}</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{statusFilter === 'ACTIVE' ? (t('remainingAmount') || 'Remaining') : (t('paid') || 'Total Repayment')}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('status') || 'Status'}</th>
             {(statusFilter === 'ACTIVE' || statusFilter === 'ALL') && !readOnly && <th className="px-6 py-3 text-left text-sm font-semibold text-white uppercase tracking-wide">{t('actions') || 'Actions'}</th>}
           </>
