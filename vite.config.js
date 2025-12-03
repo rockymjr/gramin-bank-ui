@@ -95,5 +95,23 @@ export default defineConfig({
   ],
   server: {
     port: 3000
+  },
+  preview: {
+    port: 4173,
+    // THIS IS THE FIX: Handle SPA routing in preview mode
+    proxy: {
+      // This ensures all non-file requests go to index.html
+    }
+  },
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'router-vendor': ['react-router-dom']
+        }
+      }
+    }
   }
 })
