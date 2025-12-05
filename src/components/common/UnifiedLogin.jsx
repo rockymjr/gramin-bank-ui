@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMemberAuth } from '../../context/MemberAuthContext';
 import { LogIn, Smartphone, Lock, AlertCircle, ChevronDown } from 'lucide-react';
+import { trackAuth, trackError } from '../../utils/analytics';
 
 const UnifiedLogin = () => {
   const [loginType, setLoginType] = useState('member'); // 'member' or 'admin'
@@ -26,26 +27,33 @@ const UnifiedLogin = () => {
       if (loginType === 'member') {
         const result = await memberLogin(phone, pin);
         if (result.success) {
+          trackAuth('Member Login Success', 'Phone/PIN');
           navigate('/member/dashboard');
         } else {
+          trackAuth('Member Login Failed', 'Phone/PIN');
+          trackError('Login Failed', result.error);
           setError(result.error || 'Invalid credentials');
         }
       } else {
         const result = await adminLogin(username, password);
         if (result.success) {
+          trackAuth('Admin Login Success', 'Username/Password');
           navigate('/admin/dashboard');
         } else {
+          trackAuth('Admin Login Failed', 'Username/Password');
+          trackError('Login Failed', result.error);
           setError(result.error || 'Invalid credentials');
         }
       }
     } catch (err) {
+       trackError('Login Exception', err.message);
       setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const isFormValid = loginType === 'member' 
+  const isFormValid = loginType === 'member'
     ? phone.length === 10 && pin.length === 4
     : username.trim().length > 0 && password.trim().length > 0;
 
@@ -53,9 +61,8 @@ const UnifiedLogin = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-green-50 px-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
         <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-16 h-16 ${
-            loginType === 'member' ? 'bg-blue-100' : 'bg-green-100'
-          } rounded-full mb-4`}>
+          <div className={`inline-flex items-center justify-center w-16 h-16 ${loginType === 'member' ? 'bg-blue-100' : 'bg-green-100'
+            } rounded-full mb-4`}>
             {loginType === 'member' ? (
               <Smartphone className={loginType === 'member' ? 'text-blue-600' : 'text-green-600'} size={32} />
             ) : (
@@ -83,7 +90,7 @@ const UnifiedLogin = () => {
               </span>
               <ChevronDown size={20} className={`text-gray-400 transition ${showDropdown ? 'rotate-180' : ''}`} />
             </button>
-            
+
             {showDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                 <button
@@ -198,9 +205,8 @@ const UnifiedLogin = () => {
           <button
             type="submit"
             disabled={loading || !isFormValid}
-            className={`w-full ${
-              loginType === 'member' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'
-            } text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2`}
+            className={`w-full ${loginType === 'member' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'
+              } text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2`}
           >
             {loading ? (
               <>

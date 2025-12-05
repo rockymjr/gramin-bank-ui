@@ -1,13 +1,14 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { MemberAuthProvider } from './context/MemberAuthContext';
+import { MemberAuthProvider, useMemberAuth } from './context/MemberAuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import MemberProtectedRoute from './components/common/MemberProtectedRoute';
 import UnifiedLogin from './components/common/UnifiedLogin';
+import { initGA, trackPageView } from './utils/analytics';
 
 // Public Pages
 import Summary from './components/public/Summary';
@@ -19,7 +20,6 @@ import MemberManagement from './components/admin/MemberManagement';
 import DepositManagement from './components/admin/DepositManagement';
 import LoanManagement from './components/admin/LoanManagement';
 import MemberStatement from './components/admin/MemberStatement';
-
 import YearlyReport from './components/admin/YearlyReport';
 
 // Member Pages
@@ -30,18 +30,35 @@ const HomePage = () => {
   return (
     <div>
       <Summary />
-      {/* Quick access available in Navbar for admins/operators - removed duplicate home buttons */}
     </div>
   );
 };
 
+// Analytics Tracker Component
+function AnalyticsTracker() {
+  const location = useLocation();
 
+  useEffect(() => {
+    // Track page view on route change
+    trackPageView(location.pathname + location.search, document.title);
+  }, [location]);
+
+  return null;
+}
+
+// Main App Component
 function App() {
+  useEffect(() => {
+    // Initialize Google Analytics on app load
+    initGA();
+  }, []);
+
   return (
     <LanguageProvider>
       <AuthProvider>
         <MemberAuthProvider>
           <Router>
+            <AnalyticsTracker />
             <div className="flex flex-col min-h-screen bg-gray-50">
               <Navbar />
               <main className="flex-grow">
@@ -56,10 +73,10 @@ function App() {
   );
 }
 
-// AppRoutes is rendered inside MemberAuthProvider, so hooks are safe here
-import { useMemberAuth } from './context/MemberAuthContext';
+// AppRoutes Component - rendered inside MemberAuthProvider
 function AppRoutes() {
   const { isOperator } = useMemberAuth() || {};
+  
   return (
     <Routes>
       {/* Public Routes */}
@@ -71,7 +88,6 @@ function AppRoutes() {
       <Route path="/login" element={<UnifiedLogin />} />
 
       {/* Admin Routes */}
-      {/* Removed /admin/dashboard - redirect to members */}
       <Route path="/admin/dashboard" element={<Navigate to="/admin/members" replace />} />
       <Route
         path="/admin/members"
