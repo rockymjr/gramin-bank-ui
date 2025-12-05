@@ -27,6 +27,12 @@ export const adminService = {
     return response.data;
   },
 
+  // NEW: Unblock member
+  unblockMember: async (id) => {
+    const response = await api.put(`/admin/members/${id}/unblock`);
+    return response.data;
+  },
+
   // Deposits
   getAllDeposits: async (status = 'ACTIVE', page = 0, size = 10) => {
     const response = await api.get(`/admin/deposits?status=${status}&page=${page}&size=${size}`);
